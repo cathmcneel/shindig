@@ -11,12 +11,22 @@ var getEvents = function() {
     //typeId Array
     //geoPoint Geohash string
     //sort date,name,desc
+    //classificationName string
+    //category_id see notes
 
-    //var exampleLatLong = "latlong=40.7138,-74.0060"
-    //var exampleStartDateTime = "startDateTime=2022-02-22T00:00:01Z"
-    //var exampleEndDateTime = "endDateTime=2022-02-24T23:59:59Z"
+    // var latLong = ("40.7138" + "," + "-74.0060");
+    // var startDateTime = ("2022-02-22T00:00:01Z");
+    // var endDateTime = ("2022-02-24T23:59:59Z");
+    // var classificationName = "Sports";
 
-    fetch("https://app.ticketmaster.com/discovery/v2/events.json?latlong=40.7138,-74.0060&startDateTime=2022-02-22T00:00:01Z&endDateTime=2022-02-24T23:59:59Z&size=100&apikey=qMeZuZFNC7wTNBRfgRDNS9UVVganTX77")
+    // var ticketMasterMayI = ("https://app.ticketmaster.com/discovery/v2/events.json?latlong=" + latLong + "&startDateTime=" + startDateTime + "&endDateTime=" + endDateTime + "&classificationName=" classificationName "&size=100&apikey=qMeZuZFNC7wTNBRfgRDNS9UVVganTX77")
+
+
+
+    // https://app.ticketmaster.eu/mfxapi/v2/categories
+
+
+    fetch("https://app.ticketmaster.com/discovery/v2/events.json?latlong=40.7138,-74.0060&startDateTime=2022-02-22T00:00:01Z&endDateTime=2022-02-24T23:59:59Z&classificationName=Music&size=100&apikey=qMeZuZFNC7wTNBRfgRDNS9UVVganTX77")
     .then(function (response) {
         return response.json();
     })
