@@ -13,16 +13,16 @@ var getEvents = function(latLong) {
     })
     .then(function (data) {
         console.log(data);
-        //loop here
-        var eventName = (data._embedded.events[0].name);
-        var eventLocation = (data._embedded.events[0]._embedded.venues[0].name);
-        var eventLink = (data._embedded.events[0].url);
-        //first images tend to have 16:9 ratio
-        var eventImage = (data._embedded.events[0].images[0].url);
-        var eventPriceMin = (data._embedded.events[0].priceRanges[0].min);
-        var eventPriceMax = (data._embedded.events[0].priceRanges[0].max);
-        var eventPrice = ("Prices from $" + eventPriceMin + " - $" +eventPriceMax);
-        eventToken(eventName, eventLocation, eventLink, eventImage, eventPrice);
+        for (i=0; 1<data._embedded.events.length; i++) {
+            var eventName = (data._embedded.events[i].name);
+            var eventLocation = (data._embedded.events[i]._embedded.venues[0].name);
+            var eventLink = (data._embedded.events[i].url);
+            var eventImage = (data._embedded.events[i].images[0].url);
+            var eventPriceMin = (data._embedded.events[i].priceRanges[0].min);
+            var eventPriceMax = (data._embedded.events[i].priceRanges[0].max);
+            var eventPrice = ("Prices from $" + eventPriceMin + " - $" +eventPriceMax);
+            eventToken(eventName, eventLocation, eventLink, eventImage, eventPrice);
+        };
     });
 };
 
@@ -36,7 +36,8 @@ var eventToken = function(eventName, eventLocation, eventLink, eventImage, event
     var tokenPrice = document.createElement("p");
     tokenImage.setAttribute("src", eventImage);
     tokenImage.setAttribute("alt", "Event Image");
-    tokenImage.setAttribute("style", "width:100px");
+    //we can replace next line if we style everything; note - these images tend to have 16:9 ratio.
+    tokenImage.setAttribute("style", "height:75px");
     tokenTitle.textContent = eventName;
     tokenTitle.setAttribute("href", eventLink);
     tokenLocation.textContent = eventLocation;
