@@ -9,6 +9,12 @@ var getEvents = function() {
 };
 getEvents();
 
+
+//When date is pcicked datepicker will come up mindate won't allow for past events
+$("#modalEventDate").datepicker( {
+    minDate: 1
+});
+
 //add eventlisteners to buttons to get citys
 //add calendar drop down thing from week 4(?) to get date
 //format calls to apis
