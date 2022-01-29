@@ -1,7 +1,9 @@
-//get event list from TicketMaster
+//TODO: fix location tool
+//TODO: make an if clause for eventprices that are free to prevent error in looping
 //TODO: replace startDateTime and endDateTime with input from User
 //TODO: replace classificationName with input from User
 
+//get event list from TicketMaster
 var getEvents = function(latLong) {
     var startDateTime = ("2022-02-22T00:00:01Z");
     var endDateTime = ("2022-02-24T23:59:59Z");
@@ -31,7 +33,7 @@ var eventToken = function(eventName, eventLocation, eventLink, eventImage, event
     var resultsField = document.getElementById("results-buttons");
     var token = document.createElement("button");
     var tokenImage = document.createElement("img");
-    var tokenTitle = document.createElement("p");
+    var tokenTitle = document.createElement("a");
     var tokenLocation = document.createElement("p");
     var tokenPrice = document.createElement("p");
     tokenImage.setAttribute("src", eventImage);
