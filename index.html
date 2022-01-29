@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/css/style.css" />
     <title>Shindig</title>
 </head>
@@ -11,19 +12,40 @@
     <header>
         <h1>Shindig!</h1>
     </header>
-    <nav id="search-bar">
+    <div class="search-bar">
+        <!-- Update search date field to allow for datepicker in js-->
+    <nav>
         <textarea id="city-search-field">search city here</textarea>
-        <textarea id="date-search-field">search date here</textarea>
+        <div class = "date-container">
+            <label for="modalEventDate"> Search Date Here</label>
+            <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalEventDate" autocomplete = "off">
+        </div>
         <radio id="option-search-field">*select option field here*</radio>
         <button id="search-button">Click to search for City</button>        
     </nav>
-    <span>
+</div>
+<div class="box-mult container">
+    <div class= "row d-flex justify-content-around">
+    <div class="results-box col-sm-5">
         <article id="results-buttons">All the results will pop up here as buttons. This is obviously not formatted at all.</article>
+        <button>Justin Bieber Concert!! 8pm Madison Square Garden $50</button>
+    </div>
+    <div class="saved-items col-sm-5">
         <article id="planning-field">We could format this other field as basic calendar blocks for the specified dates so the user could put the buttons on the days and see what they want?</article>
-    </span>
+        <button>Saved-Item Ariana Grande Concert 7pm November 30th $75</button>
+    </div>
+</div>
+</div>
+  
     <footer>
         <p>McNeel, Calabrese, & Bowes</p>
     </footer>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./assets/js/script.js"></script>
 </body>
 </html>

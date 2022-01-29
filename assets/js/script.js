@@ -51,6 +51,24 @@ var eventToken = function(eventName, eventLocation, eventLink, eventImage, event
     resultsField.appendChild(token);
 };
 
+//When date is pcicked datepicker will come up mindate won't allow for past events
+$("#modalEventDate").datepicker( {
+    minDate: 1
+});
+
+//add eventlisteners to buttons to get citys
+//add calendar drop down thing from week 4(?) to get date
+//format calls to apis
+//make calls to apis
+// https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/
+// https://platform.seatgeek.com/
+// https://www.eventbrite.com/platform/docs/introduction
+//reformat information
+//make draggable buttons from infomation
+//format fields for user to drag buttons hither and thither
+//make a save to local storage button for user to save their options
+//drink martinis as the $$$ pours in
+
 //clear text function
 var clearText = function() {
     document.getElementById('city-search-field').value = "";
