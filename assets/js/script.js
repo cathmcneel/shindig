@@ -1,8 +1,12 @@
 //TODO: replace startDateTime and endDateTime with input from User
-//TODO: replace classificationName with input from User
-//TODO: reformat eventDate and eventTime output 
+//TODO: replace classificationName with input from User -- see notes at bottom for classification names
+//TODO: reformat eventDate and eventTime output to USA norm
 //TODO: save button
 //TODO: name button
+
+const shindigArray = [];
+const savedTokenArrays = shindigArray
+
 
 //get event list from TicketMaster
 var getEvents = function(latLong) {
@@ -24,14 +28,17 @@ var getEvents = function(latLong) {
             var eventDate = (data._embedded.events[i].dates.start.localDate);
             var eventTime = (data._embedded.events[i].dates.start.localTime);
             var eventDateTime = (eventDate + ", " + eventTime);
-            if (!!data._embedded.events[i].sales) {
+            if (!!data._embedded.events[i].priceRanges === false) {
                 eventPrice = "Tickets are not yet on sale";
-            } else if (data._embedded.events[i].priceRanges[0].max < 0){
-            var eventPriceMin = (data._embedded.events[i].priceRanges[0].min);
-            var eventPriceMax = (data._embedded.events[i].priceRanges[0].max);
-            var eventPrice = ("Prices from $" + eventPriceMin + " - $" +eventPriceMax);
+                console.log("ping");
+            } else if (data._embedded.events[i].priceRanges[0].max > 0){
+                var eventPriceMin = (data._embedded.events[i].priceRanges[0].min);
+                var eventPriceMax = (data._embedded.events[i].priceRanges[0].max);
+                var eventPrice = ("Prices from $" + eventPriceMin + " - $" +eventPriceMax);
+                console.log("ping");
             } else {
                 eventPrice = "Free";
+                console.log("ping");
             };
             eventToken(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice);
         };
@@ -48,41 +55,44 @@ var eventToken = function(eventDateTime, eventName, eventLocation, eventLink, ev
     var tokenTitle = document.createElement("a");
     var tokenLocation = document.createElement("p");
     var tokenPrice = document.createElement("p");
+    var tokenButton = document.createElement("button");
+    const tokenArray = [eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice];
+    const tokenArrayString = JSON.stringify(tokenArray);
+    token.setAttribute("id", eventName);
+    token.setAttribute("info", tokenArrayString);
     tokenImage.setAttribute("src", eventImage);
     tokenImage.setAttribute("alt", "Event Image");
-    //we can replace next line if we style everything; note - these images tend to have 16:9 ratio.
-    tokenImage.setAttribute("style", "height:75px");
+    tokenImage.setAttribute("style", "height:72px");
     tokenDateTime.textContent = eventDateTime;
     tokenTitle.textContent = eventName;
     tokenTitle.setAttribute("href", eventLink);
     tokenLocation.textContent = eventLocation;
     tokenPrice.textContent = eventPrice;
+    tokenButton.setAttribute("style", "height:72px, width:128px")
+    tokenButton.textContent = "Click to Save"
     token.appendChild(tokenImage);
     token.appendChild(tokenDiv);
     tokenDiv.appendChild(tokenDateTime);
     tokenDiv.appendChild(tokenTitle);
     tokenDiv.appendChild(tokenLocation);
     tokenDiv.appendChild(tokenPrice);
+    token.appendChild(tokenButton);
     resultsField.appendChild(token);
+    console.log(eventName);
+    tokenButton.addEventListener("click", function() {
+        var savedTokens = document.getElementById("planning-field");
+        var tokenId = document.getElementById(eventName);
+        savedTokens.appendChild(tokenId);
+        shindigArray.push(tokenArray);
+        saveTheTokens();
+        console.log("shindigArray: " + shindigArray);
+    });
 };
 
-//When date is pcicked datepicker will come up mindate won't allow for past events
-$("#modalEventDate").datepicker( {
-    minDate: 1
-});
-
-//add eventlisteners to buttons to get citys
-//add calendar drop down thing from week 4(?) to get date
-//format calls to apis
-//make calls to apis
-// https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/
-// https://platform.seatgeek.com/
-// https://www.eventbrite.com/platform/docs/introduction
-//reformat information
-//make draggable buttons from infomation
-//format fields for user to drag buttons hither and thither
-//make a save to local storage button for user to save their options
-//drink martinis as the $$$ pours in
+//save all saved tokens to local storage using global 'savedTokenArrays'
+var saveTheTokens = function() {
+    localStorage.setItem("shindig", savedTokenArrays);
+};
 
 //clear text function
 var clearText = function() {
@@ -112,6 +122,12 @@ var getLocation = function(param) {
         });
 };
 
+//When date is picked datepicker will come up mindate won't allow for past events
+$("#modalEventDate").datepicker( {
+    minDate: 1
+});
+
+
 //this button is to get user request and format it for google geocode service
 document.getElementById("search-button").addEventListener("click", function () {
     var placeSearchName = document.getElementById("city-search-field").value;
@@ -127,6 +143,18 @@ document.getElementById("search-button").addEventListener("click", function () {
     };
     clearText();
 });
+
+
+//TicketMaster categories for scroll-down list
+//classical 
+//comedy
+//concerts
+//dance
+//fine art
+//music
+//opera
+//sports
+//theatre
 
 
 //TicketMaster input values
