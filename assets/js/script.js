@@ -1,6 +1,69 @@
 //saved button array for storage
 const shindigArray = [];
-const savedTokenArrays = shindigArray
+
+var repopulatePage = function(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice) {
+    let tokenObject = Object();
+    tokenObject.eventDateTime = eventDateTime;
+    tokenObject.eventName = eventName;
+    tokenObject.eventLocation = eventLocation;
+    tokenObject.eventLink = eventLink;
+    tokenObject.eventImage = eventImage;
+    tokenObject.eventPrice = eventPrice;
+    var planningField = document.getElementById("planning-field");
+    var token = document.createElement("button");
+    var tokenImage = document.createElement("img");
+    var tokenDiv = document.createElement("div");
+    var tokenDateTime = document.createElement("p");
+    var tokenTitle = document.createElement("a");
+    var tokenLocation = document.createElement("p");
+    var tokenPrice = document.createElement("p");
+    var tokenButton = document.createElement("button");
+    token.setAttribute("id", eventName);
+    tokenImage.setAttribute("src", eventImage);
+    tokenImage.setAttribute("alt", "Event Image");
+    tokenImage.setAttribute("style", "height:72px");
+    tokenDateTime.textContent = eventDateTime;
+    tokenTitle.textContent = eventName;
+    tokenTitle.setAttribute("href", eventLink);
+    tokenLocation.textContent = eventLocation;
+    tokenPrice.textContent = eventPrice;
+    tokenButton.setAttribute("style", "height:72px, width:128px")
+    tokenButton.textContent = "Click to Remove"
+    token.appendChild(tokenImage);
+    token.appendChild(tokenDiv);
+    tokenDiv.appendChild(tokenDateTime);
+    tokenDiv.appendChild(tokenTitle);
+    tokenDiv.appendChild(tokenLocation);
+    tokenDiv.appendChild(tokenPrice);
+    token.appendChild(tokenButton);
+    planningField.appendChild(token);
+    tokenButton.addEventListener("click", function() {
+        var thisToken = document.getElementById(eventName);
+        resultsField.appendChild(thisToken);
+        savedTokens.removeChild(thisToken);
+        //TODO: remove element from global array 'shindigArray'
+    });
+};
+
+//get items from local storage
+var rememberArray = function() {
+    yeOldeShindig = localStorage.getItem("shindig");
+    reShindig = JSON.parse(yeOldeShindig);
+    for (i=0; i<reShindig.length; i++) {
+        var eventDateTime = reShindig[i].eventDateTime;
+        var eventName = reShindig[i].eventName;
+        var eventLocation = reShindig[i].eventLocation;
+        var eventLink = reShindig[i].eventLink;
+        var eventImage = reShindig[i].eventImage;   
+        var eventPrice = reShindig[i].eventPrice;
+        repopulatePage(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice);
+    }
+    console.log(reShindig[0]);
+};
+if (!!(localStorage.getItem("shindig")) === true) {
+    rememberArray();
+}; 
+
 
 //get event list from TicketMaster
 var getEvents = function(latLong) {
@@ -24,7 +87,7 @@ var getEvents = function(latLong) {
             var eventDateTime = (eventDate + ", " + eventTime);
             if (!!data._embedded.events[i].priceRanges === false) {
                 eventPrice = "Tickets are not yet on sale";
-            } else if (data._embedded.events[i].priceRanges[0].max > 0){
+            } else if (data._embedded.events[i].priceRanges[0].max >= 0){
                 var eventPriceMin = (data._embedded.events[i].priceRanges[0].min);
                 var eventPriceMax = (data._embedded.events[i].priceRanges[0].max);
                 var eventPrice = ("Prices from $" + eventPriceMin + " - $" +eventPriceMax);
@@ -37,7 +100,14 @@ var getEvents = function(latLong) {
 };
 
 //make button from results or (eventually) from local storage
-var eventToken = function(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice) {
+var eventToken = function(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice) { 
+    let tokenObject = Object();
+    tokenObject.eventDateTime = eventDateTime;
+    tokenObject.eventName = eventName;
+    tokenObject.eventLocation = eventLocation;
+    tokenObject.eventLink = eventLink;
+    tokenObject.eventImage = eventImage;
+    tokenObject.eventPrice = eventPrice;
     var resultsField = document.getElementById("results-buttons");
     var token = document.createElement("button");
     var tokenImage = document.createElement("img");
@@ -47,10 +117,7 @@ var eventToken = function(eventDateTime, eventName, eventLocation, eventLink, ev
     var tokenLocation = document.createElement("p");
     var tokenPrice = document.createElement("p");
     var tokenButton = document.createElement("button");
-    const tokenArray = [eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice];
-    const tokenArrayString = JSON.stringify(tokenArray);
     token.setAttribute("id", eventName);
-    token.setAttribute("info", tokenArrayString);
     tokenImage.setAttribute("src", eventImage);
     tokenImage.setAttribute("alt", "Event Image");
     tokenImage.setAttribute("style", "height:72px");
@@ -72,15 +139,23 @@ var eventToken = function(eventDateTime, eventName, eventLocation, eventLink, ev
     tokenButton.addEventListener("click", function() {
         var savedTokens = document.getElementById("planning-field");
         var tokenId = document.getElementById(eventName);
+        tokenButton.textContent = "Click to Remove";
+        tokenButton.addEventListener("click", function() {
+            var thisToken = document.getElementById(eventName);
+            resultsField.appendChild(thisToken);
+            savedTokens.removeChild(thisToken);
+            //TODO: remove element from global array 'shindigArray'
+        });
         savedTokens.appendChild(tokenId);
-        shindigArray.push(tokenArray);
+        shindigArray.push(tokenObject);
         saveTheTokens();
     });
 };
 
-//save all saved tokens to local storage using global 'savedTokenArrays'
+//save all saved tokens to local storage using global 'shindigArray'
 var saveTheTokens = function() {
-    localStorage.setItem("shindig", savedTokenArrays);
+    var shindigArrayJson = JSON.stringify(shindigArray);
+    localStorage.setItem("shindig", shindigArrayJson);
 };
 
 //clear text function
