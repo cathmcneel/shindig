@@ -1,12 +1,6 @@
-//TODO: replace startDateTime and endDateTime with input from User
-//TODO: replace classificationName with input from User -- see notes at bottom for classification names
-//TODO: reformat eventDate and eventTime output to USA norm
-//TODO: save button
-//TODO: name button
-
+//saved button array for storage
 const shindigArray = [];
 const savedTokenArrays = shindigArray
-
 
 //get event list from TicketMaster
 var getEvents = function(latLong) {
@@ -30,15 +24,12 @@ var getEvents = function(latLong) {
             var eventDateTime = (eventDate + ", " + eventTime);
             if (!!data._embedded.events[i].priceRanges === false) {
                 eventPrice = "Tickets are not yet on sale";
-                console.log("ping");
             } else if (data._embedded.events[i].priceRanges[0].max > 0){
                 var eventPriceMin = (data._embedded.events[i].priceRanges[0].min);
                 var eventPriceMax = (data._embedded.events[i].priceRanges[0].max);
                 var eventPrice = ("Prices from $" + eventPriceMin + " - $" +eventPriceMax);
-                console.log("ping");
             } else {
                 eventPrice = "Free";
-                console.log("ping");
             };
             eventToken(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice);
         };
@@ -78,14 +69,12 @@ var eventToken = function(eventDateTime, eventName, eventLocation, eventLink, ev
     tokenDiv.appendChild(tokenPrice);
     token.appendChild(tokenButton);
     resultsField.appendChild(token);
-    console.log(eventName);
     tokenButton.addEventListener("click", function() {
         var savedTokens = document.getElementById("planning-field");
         var tokenId = document.getElementById(eventName);
         savedTokens.appendChild(tokenId);
         shindigArray.push(tokenArray);
         saveTheTokens();
-        console.log("shindigArray: " + shindigArray);
     });
 };
 
@@ -113,10 +102,7 @@ var getLocation = function(param) {
             } else {
                 var lat = (data.results[0].geometry.location.lat).toPrecision(6);
                 var lng = (data.results[0].geometry.location.lng).toPrecision(6);
-                console.log("getLocation:" + lat);
-                console.log("getLocation:" + lng);
                 var latLong = (lat + "," + lng);
-                console.log("getLocation:" + latLong);
                 getEvents(latLong);
             }
         });
@@ -126,7 +112,6 @@ var getLocation = function(param) {
 $("#modalEventDate").datepicker( {
     minDate: 1
 });
-
 
 //this button is to get user request and format it for google geocode service
 document.getElementById("search-button").addEventListener("click", function () {
@@ -144,6 +129,11 @@ document.getElementById("search-button").addEventListener("click", function () {
     clearText();
 });
 
+//TODO: //TODO: replace startDateTime and endDateTime with input from User -- see input format below
+//TODO: replace classificationName with scroll-button input from User -- see notes at bottom for classification names
+//TODO: reformat eventDate and eventTime output in buttons to USA norm
+//TODO: repopulate page from local storage (remember to repopulate the shindigArray global value at the top of this page as well as divs displayed).
+//TODO: change button when moved to saved category to have a delete eventhandler
 
 //TicketMaster categories for scroll-down list
 //classical 
@@ -160,8 +150,8 @@ document.getElementById("search-button").addEventListener("click", function () {
 //TicketMaster input values
     //latlong string 40.7138,-74.0060
     //radius string
-    //startDateTime YYYY-MM-DD
-    //endDateTime YYYY-MM-DD
+    //startDateTime YYYY-MM-DD{'T' for time}HH:MM:SS{'A' for am or 'Z' for pm}
+    //endDateTime YYYY-MM-DD{'T' for time}HH:MM:SS{'A' for am or 'Z' for pm}
     //city Array
     //stateCode String
     //classificationName Array
