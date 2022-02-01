@@ -29,20 +29,6 @@ var removeToken = function(tokenObject) {
     saveTheTokens();
 };
 
-//eventListener functions
-//remove from saved functions:
-var unsaveToken = function(eventName, tokenObject) {
-    var savedTokens = document.getElementById("planning-field");
-    var thisToken = document.getElementById(eventName);
-    removeToken(tokenObject);
-    saveTheTokens();
-    savedTokens.removeChild(thisToken);
-}; 
-
-var saveToken = function(tokenButton, eventName, tokenObject) {
-
-};
-
 //refresh from storage section
 //refresh page with saved tokens
 var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice, tokenObject) {
@@ -81,10 +67,14 @@ var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLin
     }, { once: true });
     token.appendChild(tokenButton);
     planningField.appendChild(token);
+    shindigArray.push(tokenObject);
+    saveTheTokens();
+    console.log(shindigArray);
 };
 
 //get items from local storage, resave them to window array (shindigArray)
 var rememberArray = function () {
+    console.log(shindigArray);
     yeOldeShindig = localStorage.getItem("shindig");
     reShindig = JSON.parse(yeOldeShindig);
     for (i = 0; i < reShindig.length; i++) {
@@ -102,8 +92,6 @@ var rememberArray = function () {
             var eventImage = reShindig[i].eventImage;
             var eventPrice = reShindig[i].eventPrice;
             repopulatePage(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice, tokenObject);
-            shindigArray.push(tokenObject);
-            saveTheTokens();
     };
 };
 if (!!(localStorage.getItem("shindig")) === true) {
