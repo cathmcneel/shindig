@@ -15,15 +15,37 @@ const monthArray = [
     "December"
 ];
 
+//save all saved tokens to local storage using global 'shindigArray'
+var saveTheTokens = function () {
+    var shindigArrayJson = JSON.stringify(shindigArray);
+    localStorage.setItem("shindig", shindigArrayJson);
+};
+
+var removeToken = function(tokenObject) {
+    for (i=0; i<shindigArray.length; i++)
+    if (shindigArray[i] === tokenObject) {
+        shindigArray.splice(i, 1);
+    };
+    saveTheTokens();
+};
+
+//eventListener functions
+//remove from saved functions:
+var unsaveToken = function(eventName, tokenObject) {
+    var savedTokens = document.getElementById("planning-field");
+    var thisToken = document.getElementById(eventName);
+    removeToken(tokenObject);
+    saveTheTokens();
+    savedTokens.removeChild(thisToken);
+}; 
+
+var saveToken = function(tokenButton, eventName, tokenObject) {
+
+};
+
+//refresh from storage section
 //refresh page with saved tokens
-var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice) {
-    let tokenObject = Object();
-    tokenObject.eventDateTime = eventDateTime;
-    tokenObject.eventName = eventName;
-    tokenObject.eventLocation = eventLocation;
-    tokenObject.eventLink = eventLink;
-    tokenObject.eventImage = eventImage;
-    tokenObject.eventPrice = eventPrice;
+var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice, tokenObject) {
     var planningField = document.getElementById("planning-field");
     var token = document.createElement("button");
     var tokenImage = document.createElement("img");
@@ -50,36 +72,45 @@ var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLin
     tokenDiv.appendChild(tokenTitle);
     tokenDiv.appendChild(tokenLocation);
     tokenDiv.appendChild(tokenPrice);
+    tokenButton.addEventListener("click", function() {
+        var savedTokens = document.getElementById("planning-field");
+        var thisToken = document.getElementById(eventName);
+        removeToken(tokenObject);
+        saveTheTokens();
+        savedTokens.removeChild(thisToken);
+    }, { once: true });
     token.appendChild(tokenButton);
     planningField.appendChild(token);
-    tokenButton.addEventListener("click", function () {
-        var thisToken = document.getElementById(eventName);
-        resultsField.appendChild(thisToken);
-        savedTokens.removeChild(thisToken);
-        //TODO: remove element from global array 'shindigArray'
-    });
 };
 
-//get items from local storage
+//get items from local storage, resave them to window array (shindigArray)
 var rememberArray = function () {
     yeOldeShindig = localStorage.getItem("shindig");
     reShindig = JSON.parse(yeOldeShindig);
     for (i = 0; i < reShindig.length; i++) {
-        var eventDateTime = reShindig[i].eventDateTime;
-        var eventName = reShindig[i].eventName;
-        var eventLocation = reShindig[i].eventLocation;
-        var eventLink = reShindig[i].eventLink;
-        var eventImage = reShindig[i].eventImage;
-        var eventPrice = reShindig[i].eventPrice;
-        repopulatePage(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice);
-    }
-    console.log(reShindig[0]);
+            let tokenObject = Object();
+            tokenObject.eventDateTime = eventDateTime;
+            tokenObject.eventName = eventName;
+            tokenObject.eventLocation = eventLocation;
+            tokenObject.eventLink = eventLink;
+            tokenObject.eventImage = eventImage;
+            tokenObject.eventPrice = eventPrice;
+            var eventDateTime = reShindig[i].eventDateTime;
+            var eventName = reShindig[i].eventName;
+            var eventLocation = reShindig[i].eventLocation;
+            var eventLink = reShindig[i].eventLink;
+            var eventImage = reShindig[i].eventImage;
+            var eventPrice = reShindig[i].eventPrice;
+            repopulatePage(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice, tokenObject);
+            shindigArray.push(tokenObject);
+            saveTheTokens();
+    };
 };
 if (!!(localStorage.getItem("shindig")) === true) {
     rememberArray();
 };
 
-
+//Results to the page functions
 //get event list from TicketMaster
 var getEvents = function (latLong) {
     var startDateTime = ("2022-02-22T00:00:01Z");
@@ -105,7 +136,7 @@ var getEvents = function (latLong) {
                 var redSplit = oneSplit[1].split(":");
                 var waitForIt = parseInt(twoSplit[1]);
                 var blueSplint  = (monthArray[waitForIt] + " " + twoSplit[2] + ", " + twoSplit[0]);
-                if (redSplit[1] < 13) {
+                if (redSplit[0] < 13) {
                     mericanTime = (redSplit[0] + ":" + redSplit[1] + " am");
                 } else {
                     mericanTime = ((redSplit[0] - 12) + ":" + redSplit[1] + " pm");
@@ -154,6 +185,21 @@ var eventToken = function (eventDateTime, eventName, eventLocation, eventLink, e
     tokenPrice.textContent = eventPrice;
     tokenButton.setAttribute("style", "height:72px, width:128px")
     tokenButton.textContent = "Click to Save"
+    tokenButton.addEventListener("click", function() {
+        var savedTokens = document.getElementById("planning-field");
+        var thisToken = document.getElementById(eventName);
+        savedTokens.appendChild(thisToken);
+        tokenButton.textContent = "Click to Remove";
+        tokenButton.addEventListener("click", function() {
+            var savedTokens = document.getElementById("planning-field");
+            var thisToken = document.getElementById(eventName);
+            removeToken(tokenObject);
+            saveTheTokens();
+            savedTokens.removeChild(thisToken);
+        }, { once: true });
+        shindigArray.push(tokenObject);
+        saveTheTokens();
+    }, { once: true });
     token.appendChild(tokenImage);
     token.appendChild(tokenDiv);
     tokenDiv.appendChild(tokenDateTime);
@@ -162,27 +208,6 @@ var eventToken = function (eventDateTime, eventName, eventLocation, eventLink, e
     tokenDiv.appendChild(tokenPrice);
     token.appendChild(tokenButton);
     resultsField.appendChild(token);
-    tokenButton.addEventListener("click", function () {
-        var savedTokens = document.getElementById("planning-field");
-        var tokenId = document.getElementById(eventName);
-        tokenButton.textContent = "Click to Remove";
-        tokenButton.addEventListener("click", function () {
-            var thisToken = document.getElementById(eventName);
-            resultsField.appendChild(thisToken);
-            savedTokens.removeChild(thisToken);
-            //TODO: remove element from global array 'shindigArray'
-        });
-        savedTokens.appendChild(tokenId);
-        shindigArray.push(tokenObject);
-        saveTheTokens();
-    });
-};
-
-
-//save all saved tokens to local storage using global 'shindigArray'
-var saveTheTokens = function () {
-    var shindigArrayJson = JSON.stringify(shindigArray);
-    localStorage.setItem("shindig", shindigArrayJson);
 };
 
 //clear text function
@@ -211,7 +236,11 @@ var getLocation = function (param) {
 };
 
 //When date is picked datepicker will come up mindate won't allow for past events
-$("#modalEventDate").datepicker({
+$("#modalStartDate").datepicker({
+    minDate: 1
+});
+
+$("#modalEndDate").datepicker({
     minDate: 1
 });
 

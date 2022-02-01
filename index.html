@@ -11,18 +11,28 @@
 <body>
     <header>
         <h1>Shindig!</h1>
+        <article>A simple web app designed to help you find events the events you want, when you want them, when you want them.</article>
     </header>
     <div class="search-bar">
         <!-- Update search date field to allow for datepicker in js-->
     <nav>
-        <label for="modalEventDate">Search City Here</label>
-        <textarea id="city-search-field"></textarea>
         <div class="date-container">
-            <label for="modalEventDate">Search Date Here</label>
-            <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalEventDate" autocomplete = "off">
+            <label for="modalEventDate">Pick a location...</label>
+            <input id="city-search-field" type="text" class = "form-control" placeholder="City, State" autocomplete = "off"">
         </div>
-        <radio id="option-search-field">*select option field here*</radio>
-        <button id="search-button">Click to search for City</button>        
+        <div class="date-container">
+            <label for="modalStartDate">...and a start date...</label>
+            <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalStartDate" autocomplete = "off">
+        </div>
+        <div class="date-container">
+            <label for="modalEndDate">...and an end date...</label>
+            <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalEndDate" autocomplete = "off">
+        </div>
+        <div>
+            <label for="modalEndDate">...what kind of event...</label>
+            <radio id="option-search-field" class = "form-control">*select option field here*</radio>
+        </div>
+        <button id="search-button">...and click here for the goods.</button>        
     </nav>
 </div>
 <div class="box-mult container">
