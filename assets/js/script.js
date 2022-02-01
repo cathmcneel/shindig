@@ -100,13 +100,13 @@ if (!!(localStorage.getItem("shindig")) === true) {
 
 //Results to the page functions
 //get event list from TicketMaster
-var getEvents = function (latLong, startDateTime, endDateTime) {
+var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
     //if start date was too early it showed events from the day before
     startDateTime = startDateTime + "T07:00:01Z";
     endDateTime = endDateTime +"T23:59:59Z";
 
-    console.log(startDateTime);
-    var classificationName = "Music";
+    //console.log(startDateTime);
+    var classificationName = eventType;
     var ticketMasterMayI = ("https://app.ticketmaster.com/discovery/v2/events.json?latlong=" + latLong + "&radius=10&startDateTime=" + startDateTime + "&endDateTime=" + endDateTime + "&classificationName=" + classificationName + "&size=100&sort=date,name,asc&apikey=qMeZuZFNC7wTNBRfgRDNS9UVVganTX77");
     fetch(ticketMasterMayI)
         .then(function (response) {
@@ -207,7 +207,7 @@ var clearText = function () {
 };
 
 //call google api and get lat/long or other geo identifier for city for ticketmaster to use
-var getLocation = function (param, startDate, endDate) {
+var getLocation = function (param, startDate, endDate, eventType) {
     var googleMayI = ("https://maps.googleapis.com/maps/api/geocode/json?address=" + param + "&key=AIzaSyDWtVKZCyc6X5L_eERu0Bk_WpclnefusjU");
     fetch(googleMayI)
         .then(function (response) {
@@ -221,7 +221,7 @@ var getLocation = function (param, startDate, endDate) {
                 var lat = (data.results[0].geometry.location.lat).toPrecision(6);
                 var lng = (data.results[0].geometry.location.lng).toPrecision(6);
                 var latLong = (lat + "," + lng);
-                getEvents(latLong, startDate, endDate);
+                getEvents(latLong, startDate, endDate, eventType);
             }
         });
 };
@@ -247,18 +247,24 @@ document.getElementById("search-button").addEventListener("click", function () {
     var endDate = document.getElementById("modalEndDate").value;
     endDate = convertDate(endDate);
 
+    var eventType = document.getElementById("modalEventType").value;
+    //console.log ("event type is " + eventType);
+
 
 
     var placeSearchName = document.getElementById("city-search-field").value;
     const words = placeSearchName.split(' ');
+
+    
+
     if (words.length > 1) {
         const string = (words[0] + "_" + words[1]);
-        getLocation(string, startDate, endDate);
+        getLocation(string, startDate, endDate, eventType);
     } else if (words.length > 2) {
         const string = (words[0] + "_" + words[1] + "_" + words[2]);
-        getLocation(string, startDate, endDate);
+        getLocation(string, startDate, endDate, eventType);
     } else {
-        getLocation(placeSearchName, startDate, endDate);
+        getLocation(placeSearchName, startDate, endDate, eventType);
     };
 
     
