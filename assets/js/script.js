@@ -1,7 +1,22 @@
-//saved button array for storage
 const shindigArray = [];
+const monthArray = [
+    "flippydoo",
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+];
 
-var repopulatePage = function(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice) {
+//refresh page with saved tokens
+var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice) {
     let tokenObject = Object();
     tokenObject.eventDateTime = eventDateTime;
     tokenObject.eventName = eventName;
@@ -37,7 +52,7 @@ var repopulatePage = function(eventDateTime, eventName, eventLocation, eventLink
     tokenDiv.appendChild(tokenPrice);
     token.appendChild(tokenButton);
     planningField.appendChild(token);
-    tokenButton.addEventListener("click", function() {
+    tokenButton.addEventListener("click", function () {
         var thisToken = document.getElementById(eventName);
         resultsField.appendChild(thisToken);
         savedTokens.removeChild(thisToken);
@@ -46,15 +61,15 @@ var repopulatePage = function(eventDateTime, eventName, eventLocation, eventLink
 };
 
 //get items from local storage
-var rememberArray = function() {
+var rememberArray = function () {
     yeOldeShindig = localStorage.getItem("shindig");
     reShindig = JSON.parse(yeOldeShindig);
-    for (i=0; i<reShindig.length; i++) {
+    for (i = 0; i < reShindig.length; i++) {
         var eventDateTime = reShindig[i].eventDateTime;
         var eventName = reShindig[i].eventName;
         var eventLocation = reShindig[i].eventLocation;
         var eventLink = reShindig[i].eventLink;
-        var eventImage = reShindig[i].eventImage;   
+        var eventImage = reShindig[i].eventImage;
         var eventPrice = reShindig[i].eventPrice;
         repopulatePage(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice);
     }
@@ -62,45 +77,56 @@ var rememberArray = function() {
 };
 if (!!(localStorage.getItem("shindig")) === true) {
     rememberArray();
-}; 
+};
 
 
 //get event list from TicketMaster
-var getEvents = function(latLong) {
+var getEvents = function (latLong) {
     var startDateTime = ("2022-02-22T00:00:01Z");
     var endDateTime = ("2022-02-24T23:59:59Z");
     var classificationName = "Music";
-    var ticketMasterMayI = ("https://app.ticketmaster.com/discovery/v2/events.json?latlong=" + latLong + "&radius=10&startDateTime=" + startDateTime + "&endDateTime=" + endDateTime + "&classificationName=" + classificationName + "&size=100&sort=date,name,desc&apikey=qMeZuZFNC7wTNBRfgRDNS9UVVganTX77");
+    var ticketMasterMayI = ("https://app.ticketmaster.com/discovery/v2/events.json?latlong=" + latLong + "&radius=10&startDateTime=" + startDateTime + "&endDateTime=" + endDateTime + "&classificationName=" + classificationName + "&size=100&sort=date,name,asc&apikey=qMeZuZFNC7wTNBRfgRDNS9UVVganTX77");
     fetch(ticketMasterMayI)
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (data) {
-        console.log(data);
-        for (i=0; 1<data.page.totalElements; i++) {
-            var eventName = (data._embedded.events[i].name);
-            var eventLocation = (data._embedded.events[i]._embedded.venues[0].name);
-            var eventLink = (data._embedded.events[i].url);
-            var eventImage = (data._embedded.events[i].images[0].url);
-            var eventDate = (data._embedded.events[i].dates.start.localDate);
-            var eventTime = (data._embedded.events[i].dates.start.localTime);
-            var eventDateTime = (eventDate + ", " + eventTime);
-            if (!!data._embedded.events[i].priceRanges === false) {
-                eventPrice = "Tickets are not yet on sale";
-            } else if (data._embedded.events[i].priceRanges[0].max >= 0){
-                var eventPriceMin = (data._embedded.events[i].priceRanges[0].min);
-                var eventPriceMax = (data._embedded.events[i].priceRanges[0].max);
-                var eventPrice = ("Prices from $" + eventPriceMin + " - $" +eventPriceMax);
-            } else {
-                eventPrice = "Free";
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            console.log(data);
+            for (i = 0; 1 < data.page.totalElements; i++) {
+                var eventName = (data._embedded.events[i].name);
+                var eventLocation = (data._embedded.events[i]._embedded.venues[0].name);
+                var eventLink = (data._embedded.events[i].url);
+                var eventImage = (data._embedded.events[i].images[0].url);
+                var eventDate = (data._embedded.events[i].dates.start.localDate);
+                var eventTime = (data._embedded.events[i].dates.start.localTime);
+                var eventDateTimeFish = (eventDate + ", " + eventTime);
+                var oneSplit = eventDateTimeFish.split(",");
+                var twoSplit = oneSplit[0].split("-");
+                var redSplit = oneSplit[1].split(":");
+                var waitForIt = parseInt(twoSplit[1]);
+                var blueSplint  = (monthArray[waitForIt] + " " + twoSplit[2] + ", " + twoSplit[0]);
+                if (redSplit[1] < 13) {
+                    mericanTime = (redSplit[0] + ":" + redSplit[1] + " am");
+                } else {
+                    mericanTime = ((redSplit[0] - 12) + ":" + redSplit[1] + " pm");
+                };
+                var eventDateTime = (blueSplint + ", at " + mericanTime);
+                if (!!data._embedded.events[i].priceRanges === false) {
+                    eventPrice = "Tickets are not yet on sale";
+                } else if (data._embedded.events[i].priceRanges[0].max >= 0) {
+                    var eventPriceMin = (data._embedded.events[i].priceRanges[0].min);
+                    var eventPriceMax = (data._embedded.events[i].priceRanges[0].max);
+                    var eventPrice = ("Prices from $" + eventPriceMin + " - $" + eventPriceMax);
+                } else {
+                    eventPrice = "Free";
+                };
+                eventToken(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice);
             };
-            eventToken(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice);
-        };
-    });
+        });
 };
 
 //make button from results or (eventually) from local storage
-var eventToken = function(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice) { 
+var eventToken = function (eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice) {
     let tokenObject = Object();
     tokenObject.eventDateTime = eventDateTime;
     tokenObject.eventName = eventName;
@@ -136,11 +162,11 @@ var eventToken = function(eventDateTime, eventName, eventLocation, eventLink, ev
     tokenDiv.appendChild(tokenPrice);
     token.appendChild(tokenButton);
     resultsField.appendChild(token);
-    tokenButton.addEventListener("click", function() {
+    tokenButton.addEventListener("click", function () {
         var savedTokens = document.getElementById("planning-field");
         var tokenId = document.getElementById(eventName);
         tokenButton.textContent = "Click to Remove";
-        tokenButton.addEventListener("click", function() {
+        tokenButton.addEventListener("click", function () {
             var thisToken = document.getElementById(eventName);
             resultsField.appendChild(thisToken);
             savedTokens.removeChild(thisToken);
@@ -152,19 +178,20 @@ var eventToken = function(eventDateTime, eventName, eventLocation, eventLink, ev
     });
 };
 
+
 //save all saved tokens to local storage using global 'shindigArray'
-var saveTheTokens = function() {
+var saveTheTokens = function () {
     var shindigArrayJson = JSON.stringify(shindigArray);
     localStorage.setItem("shindig", shindigArrayJson);
 };
 
 //clear text function
-var clearText = function() {
+var clearText = function () {
     document.getElementById('city-search-field').value = "";
 };
 
 //call google api and get lat/long or other geo identifier for city for ticketmaster to use
-var getLocation = function(param) {
+var getLocation = function (param) {
     var googleMayI = ("https://maps.googleapis.com/maps/api/geocode/json?address=" + param + "&key=AIzaSyDWtVKZCyc6X5L_eERu0Bk_WpclnefusjU");
     fetch(googleMayI)
         .then(function (response) {
@@ -184,7 +211,7 @@ var getLocation = function(param) {
 };
 
 //When date is picked datepicker will come up mindate won't allow for past events
-$("#modalEventDate").datepicker( {
+$("#modalEventDate").datepicker({
     minDate: 1
 });
 
