@@ -29,8 +29,18 @@
             <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalEndDate" autocomplete = "off">
         </div>
         <div>
-            <label for="modalEndDate">...what kind of event...</label>
-            <radio id="option-search-field" class = "form-control">*select option field here*</radio>
+            <!-- dropdown menu-->
+
+            <label for="modalEventType">...what kind of event...</label>
+            <select id="option-search-field modalEventType" class = "form-control">
+                <option value ="concert">Concerts</option>
+                <option value ="sports">Sports</option>
+                <option value ="arts">Arts and Theater</option>
+                <option value ="family">Family</option>
+                <option value ="vip">VIP</option>
+                <option value ="deals">Deals</option>
+                
+            </select>
         </div>
         <button id="search-button">...and click here for the goods.</button>        
     </nav>
