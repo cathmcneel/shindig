@@ -3,10 +3,17 @@
     padding: 0;
     box-sizing: border-box;
 }
+@import "bulma/sass/utilities/_all.sass";
+@import "bulma/sass/grid/columns.sass";
+
 :root {
-    --primary-color: #ACC9E7;
-    --secondary-color: #283747;
-    --tertiary-color: #ECF0F1;
+    --primary-color: hsl(217, 71%, 53%)	;
+    --secondary-color: hsl(0, 0%, 100%)	;
+    --tertiary-color: hsl(204, 86%, 53%);
+/* 
+Black color: hsl(0, 0%, 4%)	
+
+*/
 }
 header {
     padding: 20px 35px;
@@ -68,3 +75,14 @@ footer h2 {
     margin: 0;
     text-align: right;
 }
+
+
+/*
+- Add Save and Delete button styling 
+
+
+
+
+
+
+*/
