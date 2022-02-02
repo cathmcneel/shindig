@@ -17,42 +17,58 @@
         <h1>Shindig!</h1>
         <article>A simple web app designed to help you find events the events you want, when you want them, where you want them.</article>
     </header>
-    <div class="search-bar">
+    <section class="hero">
+        <div class= "hero-body">
+            <div class="search-bar container">
         <!-- Update search date field to allow for datepicker in js-->
     <nav>
-        <div class="date-container">
-            <label for="modalEventDate">Pick a location...</label>
-            <input id="city-search-field" type="text" class = "form-control" placeholder="City, State" autocomplete = "off"">
-        </div>
-        <div class="date-container">
-            <label for="modalStartDate">...and a start date...</label>
-            <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalStartDate" autocomplete = "off">
-        </div>
-        <div class="date-container">
-            <label for="modalEndDate">...and an end date...</label>
-            <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalEndDate" autocomplete = "off">
-        </div>
-        <div>
+            <div class="date-container title is-6">
+                    <p>Pick a Location:</p>
+                <div class="subtitle">
+                    <label for="modalEventDate"></label>
+                    <input id="city-search-field" type="text" class = "form-control" placeholder="City, State" autocomplete = "off"">
+                </div>
+            </div>
+            <div class="date-container title is-6">
+                    <p>Start Date:</p> 
+                <div class="subtitle">
+                    <label for="modalStartDate"></label>
+                    <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalStartDate" autocomplete = "off">
+                </div>
+            </div>
+            <div class="date-container title is-6">
+                    <p>End Date:</p>
+                <div class="subtitle">
+                    <label for="modalEndDate"></label>
+                    <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalEndDate" autocomplete = "off">
+                </div>
+            </div>
             <!-- dropdown menu-->
+            <div>
+                    <div class = "title is-6">
+                        <p>Type of Event:</p>
+                        <label for="modalEventType"></label> 
+                    <select id="modalEventType" class = "form-control">
+                        <option value ="music">Music</option>
+                        <option value ="sports">Sports</option>
+                        <option value ="theatre&classificationName=arts">Arts & Theatre</option>
+                        <option value ="Family">Family</option>
+                        <option value ="film">Film</option>
+                        <option value ="miscellaneous">Miscellaneous</option>
+                        <option value ="Comedy">Comedy</option>
+                        <option value ="music&classificationName=sports&classificationName=family&classificationName=film&classificationName=miscellaneous&classificationName=comedy&classificationName=arts&classificationName=theater">All</option>                    
+                    </select>
+                </div>
+            </div>
+            <button class="button title-is-6 is-medium is-primary" id="search-button">...and click here for the goods.</button>        
 
-            <label for="modalEventType">...what kind of event...</label>
-            <select id="modalEventType" class = "form-control">
-                <option value ="classical">Classical</option>
-                <option value ="comedy">Comedy</option>
-                <option value ="concerts">Concerts</option>
-                <option value ="dance">Dance</option>
-                <option value ="fine-art">Fine Art</option>
-                <option value ="music">Music</option>
-                <option value ="opera">Opera</option>
-                <option value ="sports">Sports</option>
-                <option value ="theatre">Theatre</option>
-                <option value ="classical&classificationName=comedy&classificationName=concerts&classificationName=dance&classificationName=fine-art&classificationName=music&classificationName=opera&classificationName=sports&classificationName=theatre">All</option>
-                
-            </select>
-        </div>
-        <button id="search-button">...and click here for the goods.</button>        
+    </div>
+    </div>
     </nav>
-</div>
+    </section>
+
+<!-- Main page content!-->
+
 <div class="box-mult container">
     <div class= "row d-flex justify-content-around">
     <div class="results-box col-sm-5">
