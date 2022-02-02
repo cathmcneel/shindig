@@ -298,36 +298,6 @@ convertDate = function (shortDate) {
     return longDate;
 }
 
-//TODO: //TODO: replace startDateTime and endDateTime with input from User -- see input format below
-//TODO: replace classificationName with scroll-button input from User -- see notes at bottom for classification names
-//TODO: reformat eventDate and eventTime output in buttons to USA norm
-//TODO: repopulate page from local storage (remember to repopulate the shindigArray global value at the top of this page as well as divs displayed).
-//TODO: change button when moved to saved category to have a delete eventhandler
-
-//TicketMaster categories for scroll-down list
-//classical 
-//comedy
-//concerts
-//dance
-//fine art
-//music
-//opera
-//sports
-//theatre
-
-
-//TicketMaster input values
-    //latlong string 40.7138,-74.0060
-    //radius string
-    //startDateTime YYYY-MM-DD{'T' for time}HH:MM:SS{'A' for am or 'Z' for pm}
-    //endDateTime YYYY-MM-DD{'T' for time}HH:MM:SS{'A' for am or 'Z' for pm}
-    //city Array
-    //stateCode String
-    //classificationName Array
-    //size (# of responses) String
-    //genreId Array
-    //typeId Array
-    //geoPoint Geohash string
-    //sort date,name,desc
-    //classificationName string
-    //category_id see notes
+//header <h1 id="header-title">Shindig!</h1>
+//header <article id="header-article">Short text introducing website</article>
+//+css rule to make header article visible
