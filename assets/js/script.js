@@ -1,4 +1,4 @@
-const shindigArray = [];
+var shindigArray = [];
 const monthArray = [
     "flippydoo",
     "January",
@@ -21,11 +21,11 @@ var saveTheTokens = function () {
     localStorage.setItem("shindig", shindigArrayJson);
 };
 
-var removeToken = function(tokenObject) {
-    for (i=0; i<shindigArray.length; i++)
-    if (shindigArray[i] === tokenObject) {
-        shindigArray.splice(i, 1);
-    };
+var removeToken = function (tokenObject) {
+    for (i = 0; i < shindigArray.length; i++)
+        if (shindigArray[i] === tokenObject) {
+            shindigArray.splice(i, 1);
+        };
     saveTheTokens();
 };
 
@@ -58,7 +58,7 @@ var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLin
     tokenDiv.appendChild(tokenTitle);
     tokenDiv.appendChild(tokenLocation);
     tokenDiv.appendChild(tokenPrice);
-    tokenButton.addEventListener("click", function() {
+    tokenButton.addEventListener("click", function () {
         var savedTokens = document.getElementById("planning-field");
         var thisToken = document.getElementById(eventName);
         removeToken(tokenObject);
@@ -67,9 +67,7 @@ var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLin
     }, { once: true });
     token.appendChild(tokenButton);
     planningField.appendChild(token);
-    shindigArray.push(tokenObject);
-    saveTheTokens();
-   // console.log(shindigArray);
+    // console.log(shindigArray);
 };
 
 //get items from local storage, resave them to window array (shindigArray)
@@ -77,21 +75,25 @@ var rememberArray = function () {
     //console.log(shindigArray);
     yeOldeShindig = localStorage.getItem("shindig");
     reShindig = JSON.parse(yeOldeShindig);
+    console.log(reShindig);
+    console.log("ping");
     for (i = 0; i < reShindig.length; i++) {
-            let tokenObject = Object();
-            tokenObject.eventDateTime = eventDateTime;
-            tokenObject.eventName = eventName;
-            tokenObject.eventLocation = eventLocation;
-            tokenObject.eventLink = eventLink;
-            tokenObject.eventImage = eventImage;
-            tokenObject.eventPrice = eventPrice;
-            var eventDateTime = reShindig[i].eventDateTime;
-            var eventName = reShindig[i].eventName;
-            var eventLocation = reShindig[i].eventLocation;
-            var eventLink = reShindig[i].eventLink;
-            var eventImage = reShindig[i].eventImage;
-            var eventPrice = reShindig[i].eventPrice;
-            repopulatePage(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice, tokenObject);
+        var eventDateTime = reShindig[i].eventDateTime;
+        var eventName = reShindig[i].eventName;
+        var eventLocation = reShindig[i].eventLocation;
+        var eventLink = reShindig[i].eventLink;
+        var eventImage = reShindig[i].eventImage;
+        var eventPrice = reShindig[i].eventPrice;
+        let tokenObject = Object();
+        tokenObject.eventDateTime = eventDateTime;
+        tokenObject.eventName = eventName;
+        tokenObject.eventLocation = eventLocation;
+        tokenObject.eventLink = eventLink;
+        tokenObject.eventImage = eventImage;
+        tokenObject.eventPrice = eventPrice;
+        shindigArray.push(tokenObject);
+        saveTheTokens();
+        repopulatePage(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice, tokenObject);
     };
 };
 if (!!(localStorage.getItem("shindig")) === true) {
@@ -103,7 +105,7 @@ if (!!(localStorage.getItem("shindig")) === true) {
 var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
     //if start date was too early it showed events from the day before
     startDateTime = startDateTime + "T07:00:01Z";
-    endDateTime = endDateTime +"T23:59:59Z";
+    endDateTime = endDateTime + "T23:59:59Z";
 
     //console.log(startDateTime);
     var classificationName = eventType;
@@ -126,7 +128,7 @@ var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
                 var twoSplit = oneSplit[0].split("-");
                 var redSplit = oneSplit[1].split(":");
                 var waitForIt = parseInt(twoSplit[1]);
-                var blueSplint  = (monthArray[waitForIt] + " " + twoSplit[2] + ", " + twoSplit[0]);
+                var blueSplint = (monthArray[waitForIt] + " " + twoSplit[2] + ", " + twoSplit[0]);
                 if (redSplit[0] < 13) {
                     mericanTime = (redSplit[0] + ":" + redSplit[1] + " am");
                 } else {
@@ -176,12 +178,12 @@ var eventToken = function (eventDateTime, eventName, eventLocation, eventLink, e
     tokenPrice.textContent = eventPrice;
     tokenButton.setAttribute("style", "height:72px, width:128px")
     tokenButton.textContent = "Click to Save"
-    tokenButton.addEventListener("click", function() {
+    tokenButton.addEventListener("click", function () {
         var savedTokens = document.getElementById("planning-field");
         var thisToken = document.getElementById(eventName);
         savedTokens.appendChild(thisToken);
         tokenButton.textContent = "Click to Remove";
-        tokenButton.addEventListener("click", function() {
+        tokenButton.addEventListener("click", function () {
             var savedTokens = document.getElementById("planning-field");
             var thisToken = document.getElementById(eventName);
             removeToken(tokenObject);
@@ -255,7 +257,7 @@ document.getElementById("search-button").addEventListener("click", function () {
     var placeSearchName = document.getElementById("city-search-field").value;
     const words = placeSearchName.split(' ');
 
-    
+
 
     if (words.length > 1) {
         const string = (words[0] + "_" + words[1]);
@@ -267,15 +269,15 @@ document.getElementById("search-button").addEventListener("click", function () {
         getLocation(placeSearchName, startDate, endDate, eventType);
     };
 
-    
+
 
     //clear forms
     clearText();
 });
 
 //function to conver dates to ISO
-convertDate = function(shortDate) {
-    longDate = new Date(shortDate).toISOString().substr(0,10);
+convertDate = function (shortDate) {
+    longDate = new Date(shortDate).toISOString().substr(0, 10);
     return longDate;
 }
 
