@@ -69,12 +69,12 @@ var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLin
     planningField.appendChild(token);
     shindigArray.push(tokenObject);
     saveTheTokens();
-    console.log(shindigArray);
+   // console.log(shindigArray);
 };
 
 //get items from local storage, resave them to window array (shindigArray)
 var rememberArray = function () {
-    console.log(shindigArray);
+    //console.log(shindigArray);
     yeOldeShindig = localStorage.getItem("shindig");
     reShindig = JSON.parse(yeOldeShindig);
     for (i = 0; i < reShindig.length; i++) {
@@ -100,17 +100,20 @@ if (!!(localStorage.getItem("shindig")) === true) {
 
 //Results to the page functions
 //get event list from TicketMaster
-var getEvents = function (latLong) {
-    var startDateTime = ("2022-02-22T00:00:01Z");
-    var endDateTime = ("2022-02-24T23:59:59Z");
-    var classificationName = "Music";
+var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
+    //if start date was too early it showed events from the day before
+    startDateTime = startDateTime + "T07:00:01Z";
+    endDateTime = endDateTime +"T23:59:59Z";
+
+    //console.log(startDateTime);
+    var classificationName = eventType;
     var ticketMasterMayI = ("https://app.ticketmaster.com/discovery/v2/events.json?latlong=" + latLong + "&radius=10&startDateTime=" + startDateTime + "&endDateTime=" + endDateTime + "&classificationName=" + classificationName + "&size=100&sort=date,name,asc&apikey=qMeZuZFNC7wTNBRfgRDNS9UVVganTX77");
     fetch(ticketMasterMayI)
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
+            //console.log(data);
             for (i = 0; 1 < data.page.totalElements; i++) {
                 var eventName = (data._embedded.events[i].name);
                 var eventLocation = (data._embedded.events[i]._embedded.venues[0].name);
@@ -204,7 +207,7 @@ var clearText = function () {
 };
 
 //call google api and get lat/long or other geo identifier for city for ticketmaster to use
-var getLocation = function (param) {
+var getLocation = function (param, startDate, endDate, eventType) {
     var googleMayI = ("https://maps.googleapis.com/maps/api/geocode/json?address=" + param + "&key=AIzaSyDWtVKZCyc6X5L_eERu0Bk_WpclnefusjU");
     fetch(googleMayI)
         .then(function (response) {
@@ -218,7 +221,7 @@ var getLocation = function (param) {
                 var lat = (data.results[0].geometry.location.lat).toPrecision(6);
                 var lng = (data.results[0].geometry.location.lng).toPrecision(6);
                 var latLong = (lat + "," + lng);
-                getEvents(latLong);
+                getEvents(latLong, startDate, endDate, eventType);
             }
         });
 };
@@ -234,19 +237,47 @@ $("#modalEndDate").datepicker({
 
 //this button is to get user request and format it for google geocode service
 document.getElementById("search-button").addEventListener("click", function () {
+    //get start date in YYY-MM-DD format
+    var startDate = document.getElementById("modalStartDate").value;
+    startDate = convertDate(startDate);
+    //console.log(startDate);
+
+    //get end date and convert
+
+    var endDate = document.getElementById("modalEndDate").value;
+    endDate = convertDate(endDate);
+
+    var eventType = document.getElementById("modalEventType").value;
+    //console.log ("event type is " + eventType);
+
+
+
     var placeSearchName = document.getElementById("city-search-field").value;
     const words = placeSearchName.split(' ');
+
+    
+
     if (words.length > 1) {
         const string = (words[0] + "_" + words[1]);
-        getLocation(string);
+        getLocation(string, startDate, endDate, eventType);
     } else if (words.length > 2) {
         const string = (words[0] + "_" + words[1] + "_" + words[2]);
-        getLocation(string);
+        getLocation(string, startDate, endDate, eventType);
     } else {
-        getLocation(placeSearchName);
+        getLocation(placeSearchName, startDate, endDate, eventType);
     };
+
+    
+
+    //clear forms
     clearText();
 });
+
+//function to conver dates to ISO
+convertDate = function(shortDate) {
+    longDate = new Date(shortDate).toISOString().substr(0,10);
+    return longDate;
+}
 
 //TODO: //TODO: replace startDateTime and endDateTime with input from User -- see input format below
 //TODO: replace classificationName with scroll-button input from User -- see notes at bottom for classification names

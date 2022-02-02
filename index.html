@@ -29,8 +29,22 @@
             <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalEndDate" autocomplete = "off">
         </div>
         <div>
-            <label for="modalEndDate">...what kind of event...</label>
-            <radio id="option-search-field" class = "form-control">*select option field here*</radio>
+            <!-- dropdown menu-->
+
+            <label for="modalEventType">...what kind of event...</label>
+            <select id="modalEventType" class = "form-control">
+                <option value ="classical">Classical</option>
+                <option value ="comedy">Comedy</option>
+                <option value ="concerts">Concerts</option>
+                <option value ="dance">Dance</option>
+                <option value ="fine-art">Fine Art</option>
+                <option value ="music">Music</option>
+                <option value ="opera">Opera</option>
+                <option value ="sports">Sports</option>
+                <option value ="theatre">Theatre</option>
+                <option value ="classical&classificationName=comedy&classificationName=concerts&classificationName=dance&classificationName=fine-art&classificationName=music&classificationName=opera&classificationName=sports&classificationName=theatre">All</option>
+                
+            </select>
         </div>
         <button id="search-button">...and click here for the goods.</button>        
     </nav>
@@ -58,7 +72,7 @@
 </div>
   
     <footer>
-        <p>McNeel, Calabrese, & Bowes</p>
+        <p>McNeel, Calebrese, & Bowes</p>
     </footer>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
