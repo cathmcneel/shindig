@@ -15,42 +15,71 @@
     <!--Page Header Begins-->
     <header>
         <h1>Shindig!</h1>
+        <article>A simple web app designed to help you find events the events you want, when you want them, where you want them.</article>
     </header>
+    <div class="search-bar">
+        <!-- Update search date field to allow for datepicker in js-->
+    <nav>
+        <div class="date-container">
+            <label for="modalEventDate">Pick a location...</label>
+            <input id="city-search-field" type="text" class = "form-control" placeholder="City, State" autocomplete = "off"">
+        </div>
+        <div class="date-container">
+            <label for="modalStartDate">...and a start date...</label>
+            <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalStartDate" autocomplete = "off">
+        </div>
+        <div class="date-container">
+            <label for="modalEndDate">...and an end date...</label>
+            <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalEndDate" autocomplete = "off">
+        </div>
+        <div>
+            <!-- dropdown menu-->
 
-    </header>
-    <!--Search Bar Begins-->   
-    <section class= "hero">
-        <div class= "hero-body"> 
-        <div class= "container">
-            <nav class= "search-bar">
-        <textarea class="title is-6" id="city-search-field">Enter City Name Here</textarea>
-        <textarea class="title is-6" id="date-search-field">Enter Date Here</textarea>
-        <radio class="title is-6" id="option-search-field">Select from the below</radio>
-        <button class="button title-is-6 is-medium is-primary" id="search-button">Click to search</button>        
+            <label for="modalEventType">...what kind of event...</label>
+            <select id="modalEventType" class = "form-control">
+                <option value ="classical">Classical</option>
+                <option value ="comedy">Comedy</option>
+                <option value ="concerts">Concerts</option>
+                <option value ="dance">Dance</option>
+                <option value ="fine-art">Fine Art</option>
+                <option value ="music">Music</option>
+                <option value ="opera">Opera</option>
+                <option value ="sports">Sports</option>
+                <option value ="theatre">Theatre</option>
+                <option value ="classical&classificationName=comedy&classificationName=concerts&classificationName=dance&classificationName=fine-art&classificationName=music&classificationName=opera&classificationName=sports&classificationName=theatre">All</option>
+                
+            </select>
+        </div>
+        <button id="search-button">...and click here for the goods.</button>        
     </nav>
 </div>
-</div> 
-</section>  
-    <!-- Main Page Content Starts Here-->
-  <div class="container is-fluid">
-    <div class="columns">
-      <div id="results-box" class="box column is-half-desktop is-full-mobile">
-        <h3 class="title">Events Near You</h3>
-        <h4 class="subtitle" id="results-buttons">Search Results:</h4>
-        <button class="button is-size-8-desktop is-size-8-mobile is-light">Justin Bieber Concert!! 8pm Madison Square Garden $50</button>
+<div class="box-mult container">
+    <div class= "row d-flex justify-content-around">
+    <div class="results-box col-sm-5">
+        <article id="results-buttons">All the results will pop up here as buttons. This is obviously not formatted at all.</article>
+        <!-- reformatted as the js makes it: -->
+        <!-- <button>
+            <img src="" alt="missing jpg for sample use" />
+            <div>
+                <p>concert date and concert time</p>
+                <a>Concert Title as a link</a href"non_functional.html">
+                <p>concert price</p>    
+            </div>
+            <button>move button to personal div/save to local storage button</button>
+        </button> -->
     </div>
-    <div id="saved-items" class="box column is-half-desktop is-full-mobile">
-        <h3 class="title">Saved Events</h3>
-        <h4 class="subtitle" id="planning-field">Here are your saved events:</h4>
-        <button class="button is-size-8-desktop is-size-8-mobile is-light">Saved-Item Ariana Grande Concert 7pm November 30th $75</button>
-      </div>
-      </div>
+    <div class="saved-items col-sm-5">
+        <article id="planning-field">We could format this other field as basic calendar blocks for the specified dates so the user could put the buttons on the days and see what they want?</article>
+        <button>Saved-Item Ariana Grande Concert 7pm November 30th $75</button>
+
     </div>
-  
-    <!--Footer Begins--> 
-    <footer class="class-footer">
-        <p class="card-footer-item">McNeel, Calabrese, & Bowes</p>
-    </footer>
+ 
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./assets/js/script.js"></script>
 </body>
 </html>
