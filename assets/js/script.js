@@ -115,36 +115,41 @@ var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
             return response.json();
         })
         .then(function (data) {
-            //console.log(data);
-            for (i = 0; 1 < data.page.totalElements; i++) {
-                var eventName = (data._embedded.events[i].name);
-                var eventLocation = (data._embedded.events[i]._embedded.venues[0].name);
-                var eventLink = (data._embedded.events[i].url);
-                var eventImage = (data._embedded.events[i].images[0].url);
-                var eventDate = (data._embedded.events[i].dates.start.localDate);
-                var eventTime = (data._embedded.events[i].dates.start.localTime);
-                var eventDateTimeFish = (eventDate + ", " + eventTime);
-                var oneSplit = eventDateTimeFish.split(",");
-                var twoSplit = oneSplit[0].split("-");
-                var redSplit = oneSplit[1].split(":");
-                var waitForIt = parseInt(twoSplit[1]);
-                var blueSplint = (monthArray[waitForIt] + " " + twoSplit[2] + ", " + twoSplit[0]);
-                if (redSplit[0] < 13) {
-                    mericanTime = (redSplit[0] + ":" + redSplit[1] + " am");
-                } else {
-                    mericanTime = ((redSplit[0] - 12) + ":" + redSplit[1] + " pm");
+            console.log(data);
+            if (!data || data.page.totalElements === 0) {
+                var errorMsg = ("Curses! We can't find any events with your parameters. Try looking for all events, or in a large city nearby.");
+                ohNo(errorMsg);
+            } else {
+                for (i = 0; 1 < data.page.totalElements; i++) {
+                    var eventName = (data._embedded.events === undefined);
+                    var eventLocation = (data._embedded.events[i]._embedded.venues[0].name);
+                    var eventLink = (data._embedded.events[i].url);
+                    var eventImage = (data._embedded.events[i].images[0].url);
+                    var eventDate = (data._embedded.events[i].dates.start.localDate);
+                    var eventTime = (data._embedded.events[i].dates.start.localTime);
+                    var eventDateTimeFish = (eventDate + ", " + eventTime);
+                    var oneSplit = eventDateTimeFish.split(",");
+                    var twoSplit = oneSplit[0].split("-");
+                    var redSplit = oneSplit[1].split(":");
+                    var waitForIt = parseInt(twoSplit[1]);
+                    var blueSplint = (monthArray[waitForIt] + " " + twoSplit[2] + ", " + twoSplit[0]);
+                    if (redSplit[0] < 13) {
+                        mericanTime = (redSplit[0] + ":" + redSplit[1] + " am");
+                    } else {
+                        mericanTime = ((redSplit[0] - 12) + ":" + redSplit[1] + " pm");
+                    };
+                    var eventDateTime = (blueSplint + ", at " + mericanTime);
+                    if (!!data._embedded.events[i].priceRanges === false) {
+                        eventPrice = "Tickets are not yet on sale";
+                    } else if (data._embedded.events[i].priceRanges[0].max >= 0) {
+                        var eventPriceMin = (data._embedded.events[i].priceRanges[0].min);
+                        var eventPriceMax = (data._embedded.events[i].priceRanges[0].max);
+                        var eventPrice = ("Prices from $" + eventPriceMin + " - $" + eventPriceMax);
+                    } else {
+                        eventPrice = "Free";
+                    };
+                    eventToken(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice);
                 };
-                var eventDateTime = (blueSplint + ", at " + mericanTime);
-                if (!!data._embedded.events[i].priceRanges === false) {
-                    eventPrice = "Tickets are not yet on sale";
-                } else if (data._embedded.events[i].priceRanges[0].max >= 0) {
-                    var eventPriceMin = (data._embedded.events[i].priceRanges[0].min);
-                    var eventPriceMax = (data._embedded.events[i].priceRanges[0].max);
-                    var eventPrice = ("Prices from $" + eventPriceMin + " - $" + eventPriceMax);
-                } else {
-                    eventPrice = "Free";
-                };
-                eventToken(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice);
             };
         });
 };
@@ -208,6 +213,18 @@ var clearText = function () {
     document.getElementById('city-search-field').value = "";
 };
 
+var ohNo = function (errorMsg) {
+    var shinDangIt = document.getElementById("header-title");
+    var shinDrat = document.getElementById("header-article");
+    var shinDescription = document.getElementById("header-article").textContent;
+    shinDangIt.textContent = "ShinDangIt!";
+    shinDrat.textContent = errorMsg;
+    setTimeout(function () {
+        shinDangIt.textContent = "Shindig!";
+        shinDrat.textContent = shinDescription;
+    }, 10000);
+}
+
 //call google api and get lat/long or other geo identifier for city for ticketmaster to use
 var getLocation = function (param, startDate, endDate, eventType) {
     var googleMayI = ("https://maps.googleapis.com/maps/api/geocode/json?address=" + param + "&key=AIzaSyDWtVKZCyc6X5L_eERu0Bk_WpclnefusjU");
@@ -216,9 +233,9 @@ var getLocation = function (param, startDate, endDate, eventType) {
             return response.json();
         })
         .then(function (data) {
-            //error function 
             if (!data || data.status === 'ZERO_RESULTS') {
-                alert("Something went wrong, please enter a search with only three words to describe the place you're looking for.");
+                var errorMsg = ("Something went wrong, please enter a search with only three words to describe the place you're looking for.");
+                ohNo(errorMsg);
             } else {
                 var lat = (data.results[0].geometry.location.lat).toPrecision(6);
                 var lng = (data.results[0].geometry.location.lng).toPrecision(6);
