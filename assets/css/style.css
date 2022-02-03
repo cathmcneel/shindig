@@ -40,23 +40,23 @@ body {
     padding: 10px;
 }
 .container {
-    border: 2px solid black;
     width: 100%;
 }
 .search-bar {
-    border: 2px solid black;
+    border: 2px solid var(--primary-color);
+    border-radius: 15px;
 }
 .row {
-    border: 2px solid black;
+    border: 2px solid var(--primary-color);
     width: 100%;
 }
 #results-box {
-    border: 2px solid black;
+   
     margin: 5px;
     padding: 5px;
 }
 #saved-items {
-    border: 2px solid black;
+  
     margin: 5px;
     padding: 5px;
 }
@@ -88,5 +88,10 @@ nav {
     color: white;
 }
 #saved-events {
-    border: 5px solid black;
+    border: 2px solid var(--primary-color);
+    margin-bottom: 1.5rem;
+    
+}
+#subtitle {
+    text-align: center;
 }

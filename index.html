@@ -17,7 +17,7 @@
         <h1>Shindig!</h1>
     </header>
     <div>
-        <p class="subtitle" >A simple web app designed to help you find events the events you want, when you want them, where you want them.</p>
+        <p id="subtitle" class="subtitle" >A simple web app designed to help you find events the events you want, when you want them, where you want them.</p>
     </div>
     <section class="hero">
         <div class= "hero-body">
@@ -62,7 +62,7 @@
                     </select>
                 </div>
             </div>
-            <button class="button title-is-6 is-medium is-primary" id="search-button">...and click here for the goods.</button>        
+            <button class="button title-is-6 is-medium is-info" id="search-button">...and click here for the goods.</button>        
 
     </div>
     </div>
@@ -82,9 +82,7 @@
     <div class="columns">
         <div class= "row d-flex justify-content-around box column is-half-desktop is-full-mobile">
                 <h3 id="results-buttons"></h3>
-              
             <div class="columns results-box col-sm-5">
-                
             </div>
         </div>
         <!-- reformatted as the js makes it: -->
@@ -97,16 +95,14 @@
             </div>
             <button>move button to personal div/save to local storage button</button>
         </button> -->
-        <div class="column box is-half-desktop is-full-mobile">
+        <div id="saved-events" class="column box is-half-desktop is-full-mobile">
             <div class="saved-items col-sm-5">
-                <h3 class="title" id="planning-field"></h3>
-              
-                <div></div>
+                <h3 class="title" id="planning-field"></h3> 
             </div>
         </div>
     </div>
-    </div>
 </div>
+
  
      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
