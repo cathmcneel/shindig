@@ -53,9 +53,11 @@ var repopulatePage = function (tokenObject) {
     var tokenPrice = document.createElement("p");
     var tokenButton = document.createElement("button");
     token.setAttribute("id", eventData.eventId);
+    token.setAttribute("class", "token");
+    tokenImage.setAttribute("class", "event-image");
+    tokenButton.setAttribute("class", "token-button");
     tokenImage.setAttribute("src", eventData.eventImage);
     tokenImage.setAttribute("alt", "Event Image");
-    tokenImage.setAttribute("style", "height:72px");
     tokenDateTime.textContent = eventData.eventDateTime;
     tokenTitle.innerHTML = "<a href = " +eventData.eventLink+ " target = '_blank'>"+eventData.eventName+"</a>"
     //tokenTitle.setAttribute("href", eventData.eventLink);
@@ -224,6 +226,9 @@ var eventToken = function (tokenObject) {
     var tokenPrice = document.createElement("p");
     var tokenButton = document.createElement("button");
     token.setAttribute("id", info.eventId);
+    token.setAttribute("class", "token");
+    tokenImage.setAttribute("class", "event-image");
+    tokenButton.setAttribute("class", "token-button");
     tokenImage.setAttribute("src", info.eventImage);
     tokenImage.setAttribute("alt", "Event Image");
     tokenImage.setAttribute("style", "height:72px");
