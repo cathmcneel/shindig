@@ -103,10 +103,12 @@ nav {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    border-radius: 5px;
 }
 
 .event-image {
     height: 72px;
+    border-radius: 3px;
 }
 
 .token-button {
@@ -116,9 +118,11 @@ nav {
     color: var(--secondary-color);
     font-weight: bold;
     border: none;
+    border-radius: 3px;
 }
 .error {
     background-color: rgb(214, 47, 47);
     color: white;
     font-size: 30px;
+    border-radius: 3px;
 }
