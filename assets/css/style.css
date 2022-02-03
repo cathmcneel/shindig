@@ -12,7 +12,6 @@
     --tertiary-color: hsl(204, 86%, 53%);
 /* 
 Black color: hsl(0, 0%, 4%)	
-
 */
 }
 header {
@@ -40,23 +39,23 @@ body {
     padding: 10px;
 }
 .container {
-    border: 2px solid black;
     width: 100%;
 }
 .search-bar {
-    border: 2px solid black;
+    border: 2px solid var(--primary-color);
+    border-radius: 15px;
 }
 .row {
-    border: 2px solid black;
+    border: 2px solid var(--primary-color);
     width: 100%;
 }
 #results-box {
-    border: 2px solid black;
+   
     margin: 5px;
     padding: 5px;
 }
 #saved-items {
-    border: 2px solid black;
+  
     margin: 5px;
     padding: 5px;
 }
@@ -88,22 +87,10 @@ nav {
     color: white;
 }
 #saved-events {
-    border: 5px solid black;
+    border: 2px solid var(--primary-color);
+    margin-bottom: 1.5rem;
+    
 }
-.token {
-    width: 100%;
-    background: var(--primary-color);
-    display: flex;
-    flex-direction: row;
-}
-
-.event-image {
-    height: 72px;
-}
-
-.token-button {
-    height: 72px;
-    width: 128px;
-    background-color: var(--secondary-color);
-    color: var(--tertiary-color);
+#subtitle {
+    text-align: center;
 }
