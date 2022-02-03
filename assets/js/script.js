@@ -270,8 +270,8 @@ var clearText = function () {
 //error message function unsure whenthis runs
 var ohNo = function (errorMsg) {
     var shinDangIt = document.getElementById("header-title");
-    var shinDrat = document.getElementsByClassName("header-article");
-    var shinDescription = shinDrat.textContent;
+    var shinDrat = document.getElementById("header-article");
+    var shinDescription = document.getElementById("header-article").textContent;
     shinDangIt.textContent = "ShinDangIt!";
     shinDrat.textContent = errorMsg;
     setTimeout(function () {
