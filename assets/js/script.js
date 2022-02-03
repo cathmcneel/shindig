@@ -135,7 +135,8 @@ var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
                     var eventData = data._embedded.events[i];
                    //create a token object to store all information
                     var tokenObject = createTokenObject(eventData);
-                    eventToken(tokenObject);
+                    var fieldType = "results-buttons"
+                    eventToken(tokenObject, fieldType);
                 };
             };
         });
@@ -205,7 +206,7 @@ var createTokenObject = function (eventData) {
 }
 
 //make button from results or (eventually) from local storage
-var eventToken = function (tokenObject) {
+var eventToken = function (tokenObject, fieldType) {
     var info = tokenObject
     //eventDateTime
     //eventName
@@ -214,7 +215,7 @@ var eventToken = function (tokenObject) {
     //eventImage
     //eventPrice
     //create buttons
-    var resultsField = document.getElementById("results-buttons");
+    var resultsField = document.getElementById(fieldType);
     var token = document.createElement("button");
     var tokenImage = document.createElement("img");
     var tokenDiv = document.createElement("div");
@@ -238,12 +239,12 @@ var eventToken = function (tokenObject) {
 
     //save and remove token buttons
     tokenButton.addEventListener("click", function () {
-        var savedTokens = document.getElementById("planning-field");
+        var savedTokens = document.getElementById(fieldType);
         var thisToken = document.getElementById(info.eventId);
         savedTokens.appendChild(thisToken);
         tokenButton.textContent = "Click to Remove";
         tokenButton.addEventListener("click", function () {
-            var savedTokens = document.getElementById("planning-field");
+            var savedTokens = document.getElementById(fieldType);
             var thisToken = document.getElementById(info.eventId);
             removeToken(tokenObject);
             saveTheTokens();
