@@ -270,13 +270,23 @@ var clearText = function () {
 //error message function unsure whenthis runs
 var ohNo = function (errorMsg) {
     var shinDangIt = document.getElementById("header-title");
-    var shinDrat = document.getElementById("header-article");
-    var shinDescription = document.getElementById("header-article").textContent;
+    var headerArticle = $(".header-article");
+    var container = headerArticle.closest("div");
+    console.log(container);    
     shinDangIt.textContent = "ShinDangIt!";
+    headerArticle.remove();
+    
+    var shinDrat = document.createElement("p");
     shinDrat.textContent = errorMsg;
+    shinDrat.setAttribute("class", "subtitle header-article");
+    shinDrat.setAttribute("id", "subtitle");
+    container.append(shinDrat);
     setTimeout(function () {
         shinDangIt.textContent = "Shindig!";
-        shinDrat.textContent = shinDescription;
+        shinDrat.remove()
+
+        container.append(headerArticle);
+        //shinDrat.textContent = shinDescription;
     }, 10000);
 }
 
@@ -334,10 +344,11 @@ document.getElementById("search-button").addEventListener("click", function () {
     //check that start date is BEFORE end date - if it is then run get location
     if (startDate > endDate) {
         //console.log ("EEK end date is before start date!");
-        var errorMsg = ("Curses! We can't find any events with your parameters. Try looking for all events, or in a large city nearby.");
+        var errorMsg = ("Sorry, our time is linear");
         ohNo(errorMsg);
     } else {
 
+        console.log("else triggered?");
         if (words.length > 1) {
         const string = (words[0] + "_" + words[1]);
         getLocation(string, startDate, endDate, eventType);
