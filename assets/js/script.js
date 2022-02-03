@@ -21,7 +21,7 @@ $("#modalStartDate").datepicker({
 });
 
 $("#modalEndDate").datepicker({
-    minDate: 1
+    minDate: 0
 });
 
 //save all saved tokens to local storage using global 'shindigArray'
@@ -59,7 +59,7 @@ var repopulatePage = function (tokenObject) {
     tokenImage.setAttribute("src", eventData.eventImage);
     tokenImage.setAttribute("alt", "Event Image");
     tokenDateTime.textContent = eventData.eventDateTime;
-    tokenTitle.innerHTML = "<a href = " +eventData.eventLink+ " target = '_blank'>"+eventData.eventName+"</a>"
+    tokenTitle.innerHTML = "<a href = " + eventData.eventLink + " target = '_blank'>" + eventData.eventName + "</a>"
     //tokenTitle.setAttribute("href", eventData.eventLink);
     tokenLocation.textContent = eventData.eventLocation;
     tokenPrice.textContent = eventData.eventPrice;
@@ -83,6 +83,7 @@ var repopulatePage = function (tokenObject) {
     // console.log(shindigArray);
 };
 
+
 //get items from local storage, resave them to window array (shindigArray)
 var rememberArray = function () {
     //console.log(shindigArray);
@@ -91,8 +92,8 @@ var rememberArray = function () {
     //console.log(reShindig);
     //console.log("ping");
     for (i = 0; i < reShindig.length; i++) {
-        var eventData=reShindig[i]; 
-    
+        var eventData = reShindig[i];
+
         let tokenObject = Object();
         tokenObject.eventDateTime = eventData.eventDateTime;
         tokenObject.eventName = eventData.eventName;
@@ -103,12 +104,11 @@ var rememberArray = function () {
         tokenObject.eventId = eventData.eventId
         shindigArray.push(tokenObject);
         saveTheTokens();
-        repopulatePage(tokenObject);
+        var fieldType = "planning-field";
+        eventToken(tokenObject, fieldType);
     };
 };
-if (!!(localStorage.getItem("shindig")) === true) {
-    rememberArray();
-};
+
 
 //Results to the page functions
 //get event list from TicketMaster
@@ -126,7 +126,7 @@ var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
+            //console.log(data);
             if (!data || data.page.totalElements === 0) {
                 var errorMsg = ("Curses! We can't find any events with your parameters. Try looking for all events, or in a large city nearby.");
                 ohNo(errorMsg);
@@ -135,9 +135,10 @@ var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
                 for (i = 0; i < data._embedded.events.length; i++) {
                     //set eventData to one event - makes code easer to see later
                     var eventData = data._embedded.events[i];
-                   //create a token object to store all information
+                    //create a token object to store all information
                     var tokenObject = createTokenObject(eventData);
-                    eventToken(tokenObject);
+                    var fieldType = "results-buttons"
+                    eventToken(tokenObject, fieldType);
                 };
             };
         });
@@ -146,24 +147,24 @@ var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
 //create a date and time from seperate date and time information
 var createDateTime = function (eventData) {
     var eventDate = (eventData.dates.start.localDate);
-                    var eventTime = (eventData.dates.start.localTime);
-                    var eventDateTimeFish = (eventDate + ", " + eventTime);
-                    var oneSplit = eventDateTimeFish.split(",");
-                    var twoSplit = oneSplit[0].split("-");
-                    var redSplit = oneSplit[1].split(":");
-                    var waitForIt = parseInt(twoSplit[1]);
-                    var blueSplint = (monthArray[waitForIt] + " " + twoSplit[2] + ", " + twoSplit[0]);
-                    if (redSplit[0] < 13) {
-                        mericanTime = (redSplit[0] + ":" + redSplit[1] + " am");
-                    } else {
-                        mericanTime = ((redSplit[0] - 12) + ":" + redSplit[1] + " pm");
-                    };
-                    var eventDateTime = (blueSplint + ", at " + mericanTime);
-                    return eventDateTime;
+    var eventTime = (eventData.dates.start.localTime);
+    var eventDateTimeFish = (eventDate + ", " + eventTime);
+    var oneSplit = eventDateTimeFish.split(",");
+    var twoSplit = oneSplit[0].split("-");
+    var redSplit = oneSplit[1].split(":");
+    var waitForIt = parseInt(twoSplit[1]);
+    var blueSplint = (monthArray[waitForIt] + " " + twoSplit[2] + ", " + twoSplit[0]);
+    if (redSplit[0] < 13) {
+        mericanTime = (redSplit[0] + ":" + redSplit[1] + " am");
+    } else {
+        mericanTime = ((redSplit[0] - 12) + ":" + redSplit[1] + " pm");
+    };
+    var eventDateTime = (blueSplint + ", at " + mericanTime);
+    return eventDateTime;
 }
 
 //function creates a price based on the price range
-var createPrice = function(eventData) {
+var createPrice = function (eventData) {
     if (!!eventData.priceRanges === false) {
         eventPrice = "Tickets are not yet on sale";
     } else if (eventData.priceRanges[0].max >= 0) {
@@ -180,12 +181,11 @@ var createTokenObject = function (eventData) {
     //create object to store all the data
     let tokenObject = Object();
     //if no eventData.eventDateTime then create one
-    if(eventData.eventDateTime) {
+    if (eventData.eventDateTime) {
         tokenObject.eventDateTime = eventData.eventDateTime;
-    } else { 
+    } else {
         tokenObject.eventDateTime = createDateTime(eventData);;
     };
-    
 
     //if no event price then create one
     if (tokenObject.eventPrice) {
@@ -206,8 +206,24 @@ var createTokenObject = function (eventData) {
     return tokenObject;
 }
 
+//check to see if already exists
+var checkArray = function (tokenObject) {
+    //start assuming doesn't already exist - if it does exist change value
+    var exists = false;
+    for (i in shindigArray) {
+        if (shindigArray[i].eventId === tokenObject.eventId) {
+            exists = true;
+
+        }
+    }
+    //return value of exists
+    return exists;
+
+}
+
+
 //make button from results or (eventually) from local storage
-var eventToken = function (tokenObject) {
+var eventToken = function (tokenObject, fieldType) {
     var info = tokenObject
     //eventDateTime
     //eventName
@@ -216,7 +232,7 @@ var eventToken = function (tokenObject) {
     //eventImage
     //eventPrice
     //create buttons
-    var resultsField = document.getElementById("results-buttons");
+    var resultsField = document.getElementById(fieldType);
     var token = document.createElement("button");
     var tokenImage = document.createElement("img");
     var tokenDiv = document.createElement("div");
@@ -233,7 +249,7 @@ var eventToken = function (tokenObject) {
     tokenImage.setAttribute("alt", "Event Image");
     tokenImage.setAttribute("style", "height:72px");
     tokenDateTime.textContent = info.eventDateTime;
-    tokenTitle.innerHTML = "<a href = " +info.eventLink+ " target = '_blank'>"+info.eventName+"</a>"
+    tokenTitle.innerHTML = "<a href = " + info.eventLink + " target = '_blank'>" + info.eventName + "</a>"
     //tokenTitle.setAttribute("href", info.eventLink);
     //console.log(info.eventName);
     tokenLocation.textContent = info.eventLocation;
@@ -241,12 +257,40 @@ var eventToken = function (tokenObject) {
     tokenButton.setAttribute("style", "height:72px, width:128px")
     tokenButton.textContent = "Click to Save"
 
-    //save and remove token buttons
-    tokenButton.addEventListener("click", function () {
-        var savedTokens = document.getElementById("planning-field");
-        var thisToken = document.getElementById(info.eventId);
-        savedTokens.appendChild(thisToken);
-        tokenButton.textContent = "Click to Remove";
+
+    // if results is populating for first time
+    if (fieldType === "results-buttons") {
+        tokenButton.addEventListener("click", function () {
+            var savedTokens = document.getElementById("planning-field");
+            var thisToken = document.getElementById(info.eventId);
+            savedTokens.appendChild(thisToken);
+
+            tokenButton.textContent = "Click to Remove";
+            tokenButton.addEventListener("click", function () {
+                var savedTokens = document.getElementById("planning-field");
+                var thisToken = document.getElementById(info.eventId);
+                removeToken(tokenObject);
+                saveTheTokens();
+                savedTokens.removeChild(thisToken);
+            }, { once: true });
+
+            //don't push to array if it already exists in the array;
+            var exists = checkArray(tokenObject)
+            if (!exists) {
+                shindigArray.push(tokenObject);
+                console.log("does not exist!");
+            } else {
+                console.log("already saved!")
+                token.remove();
+            };
+
+            saveTheTokens();
+        }, { once: true });
+    };
+
+    //if results are populating from saved
+    if (fieldType === "planning-field") {
+        tokenButton.textContent = "Click to Remove"
         tokenButton.addEventListener("click", function () {
             var savedTokens = document.getElementById("planning-field");
             var thisToken = document.getElementById(info.eventId);
@@ -254,9 +298,8 @@ var eventToken = function (tokenObject) {
             saveTheTokens();
             savedTokens.removeChild(thisToken);
         }, { once: true });
-        shindigArray.push(tokenObject);
-        saveTheTokens();
-    }, { once: true });
+    }
+    //append all to the container
     token.appendChild(tokenImage);
     token.appendChild(tokenDiv);
     tokenDiv.appendChild(tokenDateTime);
@@ -275,13 +318,24 @@ var clearText = function () {
 //error message function unsure whenthis runs
 var ohNo = function (errorMsg) {
     var shinDangIt = document.getElementById("header-title");
-    var shinDrat = document.getElementsByClassName("header-article");
-    var shinDescription = shinDrat.textContent;
+    var headerArticle = $(".header-article");
+    var container = headerArticle.closest("div");
+    //console.log(container);    
     shinDangIt.textContent = "ShinDangIt!";
+    //remove original headerArticle text to be replaced with error message
+    headerArticle.remove();
+    var shinDrat = document.createElement("p");
     shinDrat.textContent = errorMsg;
+    shinDrat.setAttribute("class", "subtitle header-article error");
+    shinDrat.setAttribute("id", "subtitle");
+    container.append(shinDrat);
+    //after timeout replace original text in headers
     setTimeout(function () {
         shinDangIt.textContent = "Shindig!";
-        shinDrat.textContent = shinDescription;
+        shinDrat.remove()
+
+        container.append(headerArticle);
+        //shinDrat.textContent = shinDescription;
     }, 10000);
 }
 
@@ -294,7 +348,7 @@ var getLocation = function (param, startDate, endDate, eventType) {
         })
         .then(function (data) {
             if (!data || data.status === 'ZERO_RESULTS') {
-                var errorMsg = ("We can only deal with linear time.");
+                var errorMsg = ("The government has removed that location from public knowledge.");
                 ohNo(errorMsg);
 
                 //else is data is good and we can send to get Events function
@@ -318,46 +372,80 @@ convertDate = function (shortDate) {
 }
 
 
+var createClearbtn = function () {
+    var clearBtn = document.getElementById("clearBtn")
+    //console.log("clear is" + clearBtn);
+    //check if button already created
+    if (clearBtn) {
+
+    } else {
+        clearBtn = document.createElement("button");
+        searchBtn = $("#search-button");
+        divEl = searchBtn.closest("div");
+        clearBtn.setAttribute("class", "clearBtn button title-is-6 is-medium is-info");
+        clearBtn.setAttribute("id", "clearBtn");
+        //make it so button reloads page on click
+        clearBtn.setAttribute("onclick", "location.reload()");
+        clearBtn.value = "Clear Form";
+        clearBtn.textContent = "Clear Form";
+        divEl.append(clearBtn);
+
+
+
+    }
+}
+
 //this button is to get user request and format it for google geocode service
 document.getElementById("search-button").addEventListener("click", function () {
     //get start date in YYY-MM-DD format
     var startDate = document.getElementById("modalStartDate").value;
-    startDate = convertDate(startDate);
+    if (startDate) {
+        startDate = convertDate(startDate);
+    };
     //console.log(startDate);
 
     //get end date and convert
     var endDate = document.getElementById("modalEndDate").value;
-    endDate = convertDate(endDate);
+
+    if (endDate) {
+        endDate = convertDate(endDate);
+    }
+
 
     //get eventtype
     var eventType = document.getElementById("modalEventType").value;
-   
+
     //get location
     var placeSearchName = document.getElementById("city-search-field").value;
     const words = placeSearchName.split(' ');
 
     //check that start date is BEFORE end date - if it is then run get location
-    if (startDate > endDate) {
-        //console.log ("EEK end date is before start date!");
-        var errorMsg = ("Curses! We can't find any events with your parameters. Try looking for all events, or in a large city nearby.");
+    if (startDate > endDate || !placeSearchName || !startDate || !endDate) {
+        console.log("EEK check dates and location!");
+        var errorMsg = ("You have violated the Space-Time Continuum");
         ohNo(errorMsg);
     } else {
 
+        //console.log("else triggered?");
         if (words.length > 1) {
-        const string = (words[0] + "_" + words[1]);
-        getLocation(string, startDate, endDate, eventType);
+            const string = (words[0] + "_" + words[1]);
+            getLocation(string, startDate, endDate, eventType);
         } else if (words.length > 2) {
-        const string = (words[0] + "_" + words[1] + "_" + words[2]);
-        getLocation(string, startDate, endDate, eventType);
+            const string = (words[0] + "_" + words[1] + "_" + words[2]);
+            getLocation(string, startDate, endDate, eventType);
         } else {
-        getLocation(placeSearchName, startDate, endDate, eventType);
+            getLocation(placeSearchName, startDate, endDate, eventType);
         };
+
+        createClearbtn();
     };
 
     //clear forms after search executed
-    clearText();
+
 });
 
-//header <h1 id="header-title">Shindig!</h1>
-//header <article id="header-article">Short text introducing website</article>
-//+css rule to make header article visible
+
+if (!!(localStorage.getItem("shindig")) === true) {
+    rememberArray();
+};
+

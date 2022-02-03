@@ -117,3 +117,8 @@ nav {
     font-weight: bold;
     border: none;
 }
+.error {
+    background-color: rgb(214, 47, 47);
+    color: white;
+    font-size: 30px;
+}
