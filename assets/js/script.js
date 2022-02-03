@@ -30,6 +30,7 @@ var saveTheTokens = function () {
     localStorage.setItem("shindig", shindigArrayJson);
 };
 
+//remove from array
 var removeToken = function (tokenObject) {
     for (i = 0; i < shindigArray.length; i++)
         if (shindigArray[i] === tokenObject) {
@@ -40,7 +41,8 @@ var removeToken = function (tokenObject) {
 
 //refresh from storage section
 //refresh page with saved tokens
-var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice, tokenObject) {
+var repopulatePage = function (tokenObject) {
+    var eventData = tokenObject;
     var planningField = document.getElementById("planning-field");
     var token = document.createElement("button");
     var tokenImage = document.createElement("img");
@@ -50,15 +52,15 @@ var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLin
     var tokenLocation = document.createElement("p");
     var tokenPrice = document.createElement("p");
     var tokenButton = document.createElement("button");
-    token.setAttribute("id", eventName);
-    tokenImage.setAttribute("src", eventImage);
+    token.setAttribute("id", eventData.eventName);
+    tokenImage.setAttribute("src", eventData.eventImage);
     tokenImage.setAttribute("alt", "Event Image");
     tokenImage.setAttribute("style", "height:72px");
-    tokenDateTime.textContent = eventDateTime;
-    tokenTitle.textContent = eventName;
-    tokenTitle.setAttribute("href", eventLink);
-    tokenLocation.textContent = eventLocation;
-    tokenPrice.textContent = eventPrice;
+    tokenDateTime.textContent = eventData.eventDateTime;
+    tokenTitle.textContent = eventData.eventName;
+    tokenTitle.setAttribute("href", eventData.eventLink);
+    tokenLocation.textContent = eventData.eventLocation;
+    tokenPrice.textContent = eventData.eventPrice;
     tokenButton.setAttribute("style", "height:72px, width:128px")
     tokenButton.textContent = "Click to Remove"
     token.appendChild(tokenImage);
@@ -69,7 +71,7 @@ var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLin
     tokenDiv.appendChild(tokenPrice);
     tokenButton.addEventListener("click", function () {
         var savedTokens = document.getElementById("planning-field");
-        var thisToken = document.getElementById(eventName);
+        var thisToken = document.getElementById(event.eventName);
         removeToken(tokenObject);
         saveTheTokens();
         savedTokens.removeChild(thisToken);
@@ -84,25 +86,20 @@ var rememberArray = function () {
     //console.log(shindigArray);
     yeOldeShindig = localStorage.getItem("shindig");
     reShindig = JSON.parse(yeOldeShindig);
-    console.log(reShindig);
-    console.log("ping");
+    //console.log(reShindig);
+    //console.log("ping");
     for (i = 0; i < reShindig.length; i++) {
-        var eventDateTime = reShindig[i].eventDateTime;
-        var eventName = reShindig[i].eventName;
-        var eventLocation = reShindig[i].eventLocation;
-        var eventLink = reShindig[i].eventLink;
-        var eventImage = reShindig[i].eventImage;
-        var eventPrice = reShindig[i].eventPrice;
+        var event=reShindig[i];        
         let tokenObject = Object();
-        tokenObject.eventDateTime = eventDateTime;
-        tokenObject.eventName = eventName;
-        tokenObject.eventLocation = eventLocation;
-        tokenObject.eventLink = eventLink;
-        tokenObject.eventImage = eventImage;
-        tokenObject.eventPrice = eventPrice;
+        tokenObject.eventDateTime = event.eventDateTime;
+        tokenObject.eventName = event.eventName;
+        tokenObject.eventLocation = event.eventLocation;
+        tokenObject.eventLink = event.eventLink;
+        tokenObject.eventImage = event.eventImage;
+        tokenObject.eventPrice = event.eventPrice;
         shindigArray.push(tokenObject);
         saveTheTokens();
-        repopulatePage(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice, tokenObject);
+        repopulatePage(tokenObject);
     };
 };
 if (!!(localStorage.getItem("shindig")) === true) {
@@ -130,16 +127,21 @@ var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
                 var errorMsg = ("Curses! We can't find any events with your parameters. Try looking for all events, or in a large city nearby.");
                 ohNo(errorMsg);
             } else {
-
                 //changed from < total elements to less than events array length to remove error.  total elements was longer than number of events
                 for (i = 0; i < data._embedded.events.length; i++) {
                     //set eventData to one event - makes code easer to see later
                     var eventData = data._embedded.events[i];
-                    var eventName = (data._embedded.events === undefined);
-                    var eventLocation = (eventData._embedded.venues[0].name);
-                    var eventLink = (eventData.url);
-                    var eventImage = (eventData.images[0].url);
-                    var eventDate = (eventData.dates.start.localDate);
+                   //create a token object to store all information
+                    var tokenObject = createTokenObject(eventData);
+                    eventToken(tokenObject);
+                };
+            };
+        });
+};
+
+//create a date and time from seperate date and time information
+var createDateTime = function (eventData) {
+    var eventDate = (eventData.dates.start.localDate);
                     var eventTime = (eventData.dates.start.localTime);
                     var eventDateTimeFish = (eventDate + ", " + eventTime);
                     var oneSplit = eventDateTimeFish.split(",");
@@ -153,32 +155,45 @@ var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
                         mericanTime = ((redSplit[0] - 12) + ":" + redSplit[1] + " pm");
                     };
                     var eventDateTime = (blueSplint + ", at " + mericanTime);
-                    if (!!eventData.priceRanges === false) {
-                        eventPrice = "Tickets are not yet on sale";
-                    } else if (eventData.priceRanges[0].max >= 0) {
-                        var eventPriceMin = (eventData.priceRanges[0].min);
-                        var eventPriceMax = (eventData.priceRanges[0].max);
-                        var eventPrice = ("Prices from $" + eventPriceMin + " - $" + eventPriceMax);
-                    } else {
-                        eventPrice = "Free";
-                    };
+                    return eventDateTime;
+}
 
-                    var tokenObject = createTokenObject(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice);
-                    eventToken(tokenObject);
-                };
-            };
-        });
-};
+//function creates a price based on the price range
+var createPrice = function(eventData) {
+    if (!!eventData.priceRanges === false) {
+        eventPrice = "Tickets are not yet on sale";
+    } else if (eventData.priceRanges[0].max >= 0) {
+        var eventPriceMin = (eventData.priceRanges[0].min);
+        var eventPriceMax = (eventData.priceRanges[0].max);
+        var eventPrice = ("Prices from $" + eventPriceMin + " - $" + eventPriceMax);
+    } else {
+        eventPrice = "Free";
+    };
+    return eventPrice;
+}
 
-var createTokenObject = function (eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice) {
+var createTokenObject = function (eventData) {
     //create object to store all the data
     let tokenObject = Object();
-    tokenObject.eventDateTime = eventDateTime;
-    tokenObject.eventName = eventName;
-    tokenObject.eventLocation = eventLocation;
-    tokenObject.eventLink = eventLink;
-    tokenObject.eventImage = eventImage;
-    tokenObject.eventPrice = eventPrice;
+    //if no eventData.eventDateTime then create one
+    if(eventData.eventDateTime) {
+        tokenObject.eventDateTime = eventData.eventDateTime;
+    } else { 
+        tokenObject.eventDateTime = createDateTime(eventData);;
+    };
+    
+
+    //if no event price then create one
+    if (tokenObject.eventPrice) {
+        tokenObject.eventPrice = eventData.eventPrice;
+    } else {
+        tokenObject.eventPrice = createPrice(eventData);
+    }
+    //create name, location, link, and image
+    tokenObject.eventName = eventData.eventName;
+    tokenObject.eventLocation = eventData._embedded.venues[0].name;
+    tokenObject.eventLink = eventData.eventLink;
+    tokenObject.eventImage = eventData.images[0].url;
 
     return tokenObject;
 }
