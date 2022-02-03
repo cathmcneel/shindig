@@ -85,7 +85,7 @@ var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
+            //console.log(data);
             if (!data || data.page.totalElements === 0) {
                 var errorMsg = ("Curses! We can't find any events with your parameters. Try looking for all events, or in a large city nearby.");
                 ohNo(errorMsg);
@@ -273,13 +273,13 @@ var ohNo = function (errorMsg) {
     var shinDangIt = document.getElementById("header-title");
     var headerArticle = $(".header-article");
     var container = headerArticle.closest("div");
-    console.log(container);    
+    //console.log(container);    
     shinDangIt.textContent = "ShinDangIt!";
     //remove original headerArticle text to be replaced with error message
     headerArticle.remove();    
     var shinDrat = document.createElement("p");
     shinDrat.textContent = errorMsg;
-    shinDrat.setAttribute("class", "subtitle header-article");
+    shinDrat.setAttribute("class", "subtitle header-article error");
     shinDrat.setAttribute("id", "subtitle");
     container.append(shinDrat);
     //after timeout replace original text in headers
@@ -301,7 +301,7 @@ var getLocation = function (param, startDate, endDate, eventType) {
         })
         .then(function (data) {
             if (!data || data.status === 'ZERO_RESULTS') {
-                var errorMsg = ("We can only deal with linear time.");
+                var errorMsg = ("The government has removed that location from public knowledge.");
                 ohNo(errorMsg);
 
                 //else is data is good and we can send to get Events function
@@ -329,12 +329,18 @@ convertDate = function (shortDate) {
 document.getElementById("search-button").addEventListener("click", function () {
     //get start date in YYY-MM-DD format
     var startDate = document.getElementById("modalStartDate").value;
-    startDate = convertDate(startDate);
+    if (startDate){
+        startDate = convertDate(startDate);
+        };
     //console.log(startDate);
 
     //get end date and convert
     var endDate = document.getElementById("modalEndDate").value;
-    endDate = convertDate(endDate);
+    
+    if (endDate) {
+        endDate = convertDate(endDate);
+        }
+
 
     //get eventtype
     var eventType = document.getElementById("modalEventType").value;
@@ -344,13 +350,13 @@ document.getElementById("search-button").addEventListener("click", function () {
     const words = placeSearchName.split(' ');
 
     //check that start date is BEFORE end date - if it is then run get location
-    if (startDate > endDate) {
-        //console.log ("EEK end date is before start date!");
-        var errorMsg = ("Sorry, our time is linear");
+    if (startDate > endDate || !placeSearchName) {
+        console.log ("EEK check dates and location!");
+        var errorMsg = ("You have violated the Space-Time Continuum");
         ohNo(errorMsg);
     } else {
 
-        console.log("else triggered?");
+        //console.log("else triggered?");
         if (words.length > 1) {
         const string = (words[0] + "_" + words[1]);
         getLocation(string, startDate, endDate, eventType);
