@@ -325,6 +325,29 @@ convertDate = function (shortDate) {
 }
 
 
+var createClearbtn = function() {
+    var clearBtn = document.getElementById("clearBtn")
+    //console.log("clear is" + clearBtn);
+    //check if button already created
+    if (clearBtn) {
+        
+    } else {
+        clearBtn = document.createElement("button");
+        searchBtn = $("#search-button");
+        divEl = searchBtn.closest("div");
+        clearBtn.setAttribute("class", "clearBtn button title-is-6 is-medium is-info");
+        clearBtn.setAttribute("id", "clearBtn");
+        //make it so button reloads page on click
+        clearBtn.setAttribute("onclick", "location.reload()");
+        clearBtn.value = "Clear Form";
+        clearBtn.textContent = "Clear Form";
+        divEl.append(clearBtn);
+
+    
+
+    }
+}
+
 //this button is to get user request and format it for google geocode service
 document.getElementById("search-button").addEventListener("click", function () {
     //get start date in YYY-MM-DD format
@@ -366,10 +389,12 @@ document.getElementById("search-button").addEventListener("click", function () {
         } else {
         getLocation(placeSearchName, startDate, endDate, eventType);
         };
+    
+        createClearbtn();
     };
 
     //clear forms after search executed
-    clearText();
+    
 });
 
 
