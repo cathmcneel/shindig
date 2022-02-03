@@ -52,7 +52,7 @@ var repopulatePage = function (tokenObject) {
     var tokenLocation = document.createElement("p");
     var tokenPrice = document.createElement("p");
     var tokenButton = document.createElement("button");
-    token.setAttribute("id", eventData.eventName);
+    token.setAttribute("id", eventData.eventId);
     tokenImage.setAttribute("src", eventData.eventImage);
     tokenImage.setAttribute("alt", "Event Image");
     tokenImage.setAttribute("style", "height:72px");
@@ -71,7 +71,7 @@ var repopulatePage = function (tokenObject) {
     tokenDiv.appendChild(tokenPrice);
     tokenButton.addEventListener("click", function () {
         var savedTokens = document.getElementById("planning-field");
-        var thisToken = document.getElementById(eventData.eventName);
+        var thisToken = document.getElementById(eventData.eventId);
         removeToken(tokenObject);
         saveTheTokens();
         savedTokens.removeChild(thisToken);
@@ -89,15 +89,16 @@ var rememberArray = function () {
     //console.log(reShindig);
     //console.log("ping");
     for (i = 0; i < reShindig.length; i++) {
-        var event=reShindig[i]; 
+        var eventData=reShindig[i]; 
     
         let tokenObject = Object();
-        tokenObject.eventDateTime = event.eventDateTime;
-        tokenObject.eventName = event.eventName;
-        tokenObject.eventLocation = event.eventLocation;
-        tokenObject.eventLink = event.eventLink;
-        tokenObject.eventImage = event.eventImage;
-        tokenObject.eventPrice = event.eventPrice;
+        tokenObject.eventDateTime = eventData.eventDateTime;
+        tokenObject.eventName = eventData.eventName;
+        tokenObject.eventLocation = eventData.eventLocation;
+        tokenObject.eventLink = eventData.eventLink;
+        tokenObject.eventImage = eventData.eventImage;
+        tokenObject.eventPrice = eventData.eventPrice;
+        tokenObject.eventId = eventData.eventId
         shindigArray.push(tokenObject);
         saveTheTokens();
         repopulatePage(tokenObject);
@@ -192,10 +193,12 @@ var createTokenObject = function (eventData) {
     }
     //create name, location, link, and image
     tokenObject.eventName = eventData.name;
-    console.log(tokenObject.eventName);
+    //console.log(tokenObject.eventName);
     tokenObject.eventLocation = eventData._embedded.venues[0].name;
     tokenObject.eventLink = eventData.url;
     tokenObject.eventImage = eventData.images[0].url;
+    tokenObject.eventId = eventData.id;
+    //console.log(tokenObject.eventId);
     //console.log(tokenObject.eventLink);
 
     return tokenObject;
@@ -210,9 +213,6 @@ var eventToken = function (tokenObject) {
     //eventLink
     //eventImage
     //eventPrice
-
-
-
     //create buttons
     var resultsField = document.getElementById("results-buttons");
     var token = document.createElement("button");
@@ -223,7 +223,7 @@ var eventToken = function (tokenObject) {
     var tokenLocation = document.createElement("p");
     var tokenPrice = document.createElement("p");
     var tokenButton = document.createElement("button");
-    token.setAttribute("id", info.eventName);
+    token.setAttribute("id", info.eventId);
     tokenImage.setAttribute("src", info.eventImage);
     tokenImage.setAttribute("alt", "Event Image");
     tokenImage.setAttribute("style", "height:72px");
@@ -236,16 +236,15 @@ var eventToken = function (tokenObject) {
     tokenButton.setAttribute("style", "height:72px, width:128px")
     tokenButton.textContent = "Click to Save"
 
-
     //save and remove token buttons
     tokenButton.addEventListener("click", function () {
         var savedTokens = document.getElementById("planning-field");
-        var thisToken = document.getElementById(info.eventName);
+        var thisToken = document.getElementById(info.eventId);
         savedTokens.appendChild(thisToken);
         tokenButton.textContent = "Click to Remove";
         tokenButton.addEventListener("click", function () {
             var savedTokens = document.getElementById("planning-field");
-            var thisToken = document.getElementById(info.eventName);
+            var thisToken = document.getElementById(info.eventId);
             removeToken(tokenObject);
             saveTheTokens();
             savedTokens.removeChild(thisToken);
