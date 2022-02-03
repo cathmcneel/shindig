@@ -220,6 +220,7 @@ var eventToken = function (tokenObject, fieldType) {
             var savedTokens = document.getElementById("planning-field");
             var thisToken = document.getElementById(info.eventId);
             savedTokens.appendChild(thisToken);
+            
             tokenButton.textContent = "Click to Remove";
             tokenButton.addEventListener("click", function () {
                 var savedTokens = document.getElementById("planning-field");
@@ -233,8 +234,9 @@ var eventToken = function (tokenObject, fieldType) {
                 var exists = checkArray(tokenObject)
                 if(!exists) {
                     shindigArray.push(tokenObject);
-                    //console.log("does not exist!");
+                    console.log("does not exist!");
                 } else { console.log ("already saved!")
+                token.remove();
             };              
             
             saveTheTokens();
