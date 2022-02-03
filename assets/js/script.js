@@ -21,7 +21,7 @@ $("#modalStartDate").datepicker({
 });
 
 $("#modalEndDate").datepicker({
-    minDate: 1
+    minDate: 0
 });
 
 //save all saved tokens to local storage using global 'shindigArray'
