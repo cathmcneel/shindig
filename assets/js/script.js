@@ -1,4 +1,4 @@
-const shindigArray = [];
+var shindigArray = [];
 const monthArray = [
     "flippydoo",
     "January",
@@ -21,11 +21,11 @@ var saveTheTokens = function () {
     localStorage.setItem("shindig", shindigArrayJson);
 };
 
-var removeToken = function(tokenObject) {
-    for (i=0; i<shindigArray.length; i++)
-    if (shindigArray[i] === tokenObject) {
-        shindigArray.splice(i, 1);
-    };
+var removeToken = function (tokenObject) {
+    for (i = 0; i < shindigArray.length; i++)
+        if (shindigArray[i] === tokenObject) {
+            shindigArray.splice(i, 1);
+        };
     saveTheTokens();
 };
 
@@ -58,7 +58,7 @@ var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLin
     tokenDiv.appendChild(tokenTitle);
     tokenDiv.appendChild(tokenLocation);
     tokenDiv.appendChild(tokenPrice);
-    tokenButton.addEventListener("click", function() {
+    tokenButton.addEventListener("click", function () {
         var savedTokens = document.getElementById("planning-field");
         var thisToken = document.getElementById(eventName);
         removeToken(tokenObject);
@@ -67,9 +67,7 @@ var repopulatePage = function (eventDateTime, eventName, eventLocation, eventLin
     }, { once: true });
     token.appendChild(tokenButton);
     planningField.appendChild(token);
-    shindigArray.push(tokenObject);
-    saveTheTokens();
-   // console.log(shindigArray);
+    // console.log(shindigArray);
 };
 
 //get items from local storage, resave them to window array (shindigArray)
@@ -77,21 +75,25 @@ var rememberArray = function () {
     //console.log(shindigArray);
     yeOldeShindig = localStorage.getItem("shindig");
     reShindig = JSON.parse(yeOldeShindig);
+    console.log(reShindig);
+    console.log("ping");
     for (i = 0; i < reShindig.length; i++) {
-            let tokenObject = Object();
-            tokenObject.eventDateTime = eventDateTime;
-            tokenObject.eventName = eventName;
-            tokenObject.eventLocation = eventLocation;
-            tokenObject.eventLink = eventLink;
-            tokenObject.eventImage = eventImage;
-            tokenObject.eventPrice = eventPrice;
-            var eventDateTime = reShindig[i].eventDateTime;
-            var eventName = reShindig[i].eventName;
-            var eventLocation = reShindig[i].eventLocation;
-            var eventLink = reShindig[i].eventLink;
-            var eventImage = reShindig[i].eventImage;
-            var eventPrice = reShindig[i].eventPrice;
-            repopulatePage(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice, tokenObject);
+        var eventDateTime = reShindig[i].eventDateTime;
+        var eventName = reShindig[i].eventName;
+        var eventLocation = reShindig[i].eventLocation;
+        var eventLink = reShindig[i].eventLink;
+        var eventImage = reShindig[i].eventImage;
+        var eventPrice = reShindig[i].eventPrice;
+        let tokenObject = Object();
+        tokenObject.eventDateTime = eventDateTime;
+        tokenObject.eventName = eventName;
+        tokenObject.eventLocation = eventLocation;
+        tokenObject.eventLink = eventLink;
+        tokenObject.eventImage = eventImage;
+        tokenObject.eventPrice = eventPrice;
+        shindigArray.push(tokenObject);
+        saveTheTokens();
+        repopulatePage(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice, tokenObject);
     };
 };
 if (!!(localStorage.getItem("shindig")) === true) {
@@ -103,7 +105,7 @@ if (!!(localStorage.getItem("shindig")) === true) {
 var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
     //if start date was too early it showed events from the day before
     startDateTime = startDateTime + "T07:00:01Z";
-    endDateTime = endDateTime +"T23:59:59Z";
+    endDateTime = endDateTime + "T23:59:59Z";
 
     //console.log(startDateTime);
     var classificationName = eventType;
@@ -113,36 +115,41 @@ var getEvents = function (latLong, startDateTime, endDateTime, eventType) {
             return response.json();
         })
         .then(function (data) {
-            //console.log(data);
-            for (i = 0; 1 < data.page.totalElements; i++) {
-                var eventName = (data._embedded.events[i].name);
-                var eventLocation = (data._embedded.events[i]._embedded.venues[0].name);
-                var eventLink = (data._embedded.events[i].url);
-                var eventImage = (data._embedded.events[i].images[0].url);
-                var eventDate = (data._embedded.events[i].dates.start.localDate);
-                var eventTime = (data._embedded.events[i].dates.start.localTime);
-                var eventDateTimeFish = (eventDate + ", " + eventTime);
-                var oneSplit = eventDateTimeFish.split(",");
-                var twoSplit = oneSplit[0].split("-");
-                var redSplit = oneSplit[1].split(":");
-                var waitForIt = parseInt(twoSplit[1]);
-                var blueSplint  = (monthArray[waitForIt] + " " + twoSplit[2] + ", " + twoSplit[0]);
-                if (redSplit[0] < 13) {
-                    mericanTime = (redSplit[0] + ":" + redSplit[1] + " am");
-                } else {
-                    mericanTime = ((redSplit[0] - 12) + ":" + redSplit[1] + " pm");
+            console.log(data);
+            if (!data || data.page.totalElements === 0) {
+                var errorMsg = ("Curses! We can't find any events with your parameters. Try looking for all events, or in a large city nearby.");
+                ohNo(errorMsg);
+            } else {
+                for (i = 0; 1 < data.page.totalElements; i++) {
+                    var eventName = (data._embedded.events === undefined);
+                    var eventLocation = (data._embedded.events[i]._embedded.venues[0].name);
+                    var eventLink = (data._embedded.events[i].url);
+                    var eventImage = (data._embedded.events[i].images[0].url);
+                    var eventDate = (data._embedded.events[i].dates.start.localDate);
+                    var eventTime = (data._embedded.events[i].dates.start.localTime);
+                    var eventDateTimeFish = (eventDate + ", " + eventTime);
+                    var oneSplit = eventDateTimeFish.split(",");
+                    var twoSplit = oneSplit[0].split("-");
+                    var redSplit = oneSplit[1].split(":");
+                    var waitForIt = parseInt(twoSplit[1]);
+                    var blueSplint = (monthArray[waitForIt] + " " + twoSplit[2] + ", " + twoSplit[0]);
+                    if (redSplit[0] < 13) {
+                        mericanTime = (redSplit[0] + ":" + redSplit[1] + " am");
+                    } else {
+                        mericanTime = ((redSplit[0] - 12) + ":" + redSplit[1] + " pm");
+                    };
+                    var eventDateTime = (blueSplint + ", at " + mericanTime);
+                    if (!!data._embedded.events[i].priceRanges === false) {
+                        eventPrice = "Tickets are not yet on sale";
+                    } else if (data._embedded.events[i].priceRanges[0].max >= 0) {
+                        var eventPriceMin = (data._embedded.events[i].priceRanges[0].min);
+                        var eventPriceMax = (data._embedded.events[i].priceRanges[0].max);
+                        var eventPrice = ("Prices from $" + eventPriceMin + " - $" + eventPriceMax);
+                    } else {
+                        eventPrice = "Free";
+                    };
+                    eventToken(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice);
                 };
-                var eventDateTime = (blueSplint + ", at " + mericanTime);
-                if (!!data._embedded.events[i].priceRanges === false) {
-                    eventPrice = "Tickets are not yet on sale";
-                } else if (data._embedded.events[i].priceRanges[0].max >= 0) {
-                    var eventPriceMin = (data._embedded.events[i].priceRanges[0].min);
-                    var eventPriceMax = (data._embedded.events[i].priceRanges[0].max);
-                    var eventPrice = ("Prices from $" + eventPriceMin + " - $" + eventPriceMax);
-                } else {
-                    eventPrice = "Free";
-                };
-                eventToken(eventDateTime, eventName, eventLocation, eventLink, eventImage, eventPrice);
             };
         });
 };
@@ -176,12 +183,12 @@ var eventToken = function (eventDateTime, eventName, eventLocation, eventLink, e
     tokenPrice.textContent = eventPrice;
     tokenButton.setAttribute("style", "height:72px, width:128px")
     tokenButton.textContent = "Click to Save"
-    tokenButton.addEventListener("click", function() {
+    tokenButton.addEventListener("click", function () {
         var savedTokens = document.getElementById("planning-field");
         var thisToken = document.getElementById(eventName);
         savedTokens.appendChild(thisToken);
         tokenButton.textContent = "Click to Remove";
-        tokenButton.addEventListener("click", function() {
+        tokenButton.addEventListener("click", function () {
             var savedTokens = document.getElementById("planning-field");
             var thisToken = document.getElementById(eventName);
             removeToken(tokenObject);
@@ -206,6 +213,18 @@ var clearText = function () {
     document.getElementById('city-search-field').value = "";
 };
 
+var ohNo = function (errorMsg) {
+    var shinDangIt = document.getElementById("header-title");
+    var shinDrat = document.getElementById("header-article");
+    var shinDescription = document.getElementById("header-article").textContent;
+    shinDangIt.textContent = "ShinDangIt!";
+    shinDrat.textContent = errorMsg;
+    setTimeout(function () {
+        shinDangIt.textContent = "Shindig!";
+        shinDrat.textContent = shinDescription;
+    }, 10000);
+}
+
 //call google api and get lat/long or other geo identifier for city for ticketmaster to use
 var getLocation = function (param, startDate, endDate, eventType) {
     var googleMayI = ("https://maps.googleapis.com/maps/api/geocode/json?address=" + param + "&key=AIzaSyDWtVKZCyc6X5L_eERu0Bk_WpclnefusjU");
@@ -214,9 +233,9 @@ var getLocation = function (param, startDate, endDate, eventType) {
             return response.json();
         })
         .then(function (data) {
-            //error function 
             if (!data || data.status === 'ZERO_RESULTS') {
-                alert("Something went wrong, please enter a search with only three words to describe the place you're looking for.");
+                var errorMsg = ("Something went wrong, please enter a search with only three words to describe the place you're looking for.");
+                ohNo(errorMsg);
             } else {
                 var lat = (data.results[0].geometry.location.lat).toPrecision(6);
                 var lng = (data.results[0].geometry.location.lng).toPrecision(6);
@@ -255,7 +274,7 @@ document.getElementById("search-button").addEventListener("click", function () {
     var placeSearchName = document.getElementById("city-search-field").value;
     const words = placeSearchName.split(' ');
 
-    
+
 
     if (words.length > 1) {
         const string = (words[0] + "_" + words[1]);
@@ -267,48 +286,18 @@ document.getElementById("search-button").addEventListener("click", function () {
         getLocation(placeSearchName, startDate, endDate, eventType);
     };
 
-    
+
 
     //clear forms
     clearText();
 });
 
 //function to conver dates to ISO
-convertDate = function(shortDate) {
-    longDate = new Date(shortDate).toISOString().substr(0,10);
+convertDate = function (shortDate) {
+    longDate = new Date(shortDate).toISOString().substr(0, 10);
     return longDate;
 }
 
-//TODO: //TODO: replace startDateTime and endDateTime with input from User -- see input format below
-//TODO: replace classificationName with scroll-button input from User -- see notes at bottom for classification names
-//TODO: reformat eventDate and eventTime output in buttons to USA norm
-//TODO: repopulate page from local storage (remember to repopulate the shindigArray global value at the top of this page as well as divs displayed).
-//TODO: change button when moved to saved category to have a delete eventhandler
-
-//TicketMaster categories for scroll-down list
-//classical 
-//comedy
-//concerts
-//dance
-//fine art
-//music
-//opera
-//sports
-//theatre
-
-
-//TicketMaster input values
-    //latlong string 40.7138,-74.0060
-    //radius string
-    //startDateTime YYYY-MM-DD{'T' for time}HH:MM:SS{'A' for am or 'Z' for pm}
-    //endDateTime YYYY-MM-DD{'T' for time}HH:MM:SS{'A' for am or 'Z' for pm}
-    //city Array
-    //stateCode String
-    //classificationName Array
-    //size (# of responses) String
-    //genreId Array
-    //typeId Array
-    //geoPoint Geohash string
-    //sort date,name,desc
-    //classificationName string
-    //category_id see notes
+//header <h1 id="header-title">Shindig!</h1>
+//header <article id="header-article">Short text introducing website</article>
+//+css rule to make header article visible
