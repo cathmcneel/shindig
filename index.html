@@ -3,42 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="./assets/css/style.css" />
+  
     <title>Shindig</title>
 </head>
+
+<!-- Main Site Starts-->
 <body>
+    <!--Page Header Begins-->
     <header>
-        <h1>Shindig!</h1>
-        <article>A simple web app designed to help you find events the events you want, when you want them, where you want them.</article>
+        <h1 id="header-title" >Shindig!</h1>
     </header>
-    <div class="search-bar">
+    <div>
+        <p id="subtitle" class="subtitle header-article" >A simple web app designed to help you find events the events you want, when you want them, where you want them.</p>
+    </div>
+    <section class="hero">
+        <div class= "hero-body">
+            <div class="search-bar container">
         <!-- Update search date field to allow for datepicker in js-->
     <nav>
-        <div class="date-container">
-            <label for="modalEventDate">Pick a location...</label>
-            <input id="city-search-field" type="text" class = "form-control" placeholder="City, State" autocomplete = "off"">
-        </div>
-        <div class="date-container">
-            <label for="modalStartDate">...and a start date...</label>
-            <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalStartDate" autocomplete = "off">
-        </div>
-        <div class="date-container">
-            <label for="modalEndDate">...and an end date...</label>
-            <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalEndDate" autocomplete = "off">
-        </div>
-        <div>
-            <label for="modalEndDate">...what kind of event...</label>
-            <radio id="option-search-field" class = "form-control">*select option field here*</radio>
-        </div>
-        <button id="search-button">...and click here for the goods.</button>        
+            <div class="date-container title is-6">
+                    <p>Pick a Location:</p>
+                <div class="subtitle">
+                    <label for="modalEventDate"></label>
+                    <input id="city-search-field" type="text" class = "form-control" placeholder="City, State" autocomplete = "off"">
+                </div>
+            </div>
+            <div class="date-container title is-6 ">
+                    <p>Start Date:</p> 
+                <div class="subtitle">
+                    <label for="modalStartDate"></label>
+                    <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalStartDate" autocomplete = "off">
+                </div>
+            </div>
+            <div class="date-container title is-6">
+                    <p>End Date:</p>
+                <div class="subtitle">
+                    <label for="modalEndDate"></label>
+                    <input type="text" class = "form-control" placeholder="mm/yy/dd" id = "modalEndDate" autocomplete = "off">
+                </div>
+            </div>
+            <!-- dropdown menu-->
+            <div>
+                    <div class="title is-6">
+                        <p>Type of Event:</p>
+                        <label for="modalEventType"></label> 
+                    <select id="modalEventType" class = "form-control">
+                        <option value ="music">Music</option>
+                        <option value ="sports">Sports</option>
+                        <option value ="theatre&classificationName=arts">Arts & Theatre</option>
+                        <option value ="Family">Family</option>
+                        <option value ="film">Film</option>
+                        <option value ="miscellaneous">Miscellaneous</option>
+                        <option value ="Comedy">Comedy</option>
+                        <option value ="music&classificationName=sports&classificationName=family&classificationName=film&classificationName=miscellaneous&classificationName=comedy&classificationName=arts&classificationName=theater">All</option>                    
+                    </select>
+                </div>
+            </div>
+            <button class=" button title-is-6 is-medium is-info" id="search-button">...and click here for the goods.</button>        
+
+    </div>
+    </div>
     </nav>
-</div>
-<div class="box-mult container">
-    <div class= "row d-flex justify-content-around">
-    <div class="results-box col-sm-5">
-        <article id="results-buttons">All the results will pop up here as buttons. This is obviously not formatted at all.</article>
+    </section>
+
+<!-- Main page content!-->
+<!-- main element-->
+<section> 
+    <div class="columns">
+        <h3 class=" column is-half title">Events Near You</h3>
+        <h3 class=" column is-half title">Saved Events</h3>
+    </div>
+    
+</section>
+<div class="box-mult container is-fluid">
+    <div class="columns">
+        <div class= "row d-flex justify-content-around box column is-half-desktop is-full-mobile">
+                <h3 id="results-buttons"></h3>
+            <div class="columns results-box col-sm-5">
+            </div>
+        </div>
         <!-- reformatted as the js makes it: -->
         <!-- <button>
             <img src="" alt="missing jpg for sample use" />
@@ -49,17 +95,15 @@
             </div>
             <button>move button to personal div/save to local storage button</button>
         </button> -->
-    </div>
-    <div class="saved-items col-sm-5">
-        <article id="planning-field">We could format this other field as basic calendar blocks for the specified dates so the user could put the buttons on the days and see what they want?</article>
-        <button>Saved-Item Ariana Grande Concert 7pm November 30th $75</button>
+        <div id="saved-events" class="column box is-half-desktop is-full-mobile">
+            <div class="saved-items col-sm-5">
+                <h3 class="title" id="planning-field"></h3> 
+            </div>
+        </div>
     </div>
 </div>
-</div>
-  
-    <footer>
-        <p>McNeel, Calabrese, & Bowes</p>
-    </footer>
+
+ 
      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
@@ -68,4 +112,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./assets/js/script.js"></script>
 </body>
+
+<footer class="class-footer">
+    <p class="card-footer-item">McNeel, Calabrese, & Bowes</p>
+</footer>
+
 </html>
