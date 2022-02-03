@@ -146,13 +146,12 @@ var createTokenObject = function (eventData) {
         tokenObject.eventDateTime = createDateTime(eventData);;
     };
     
-
     //if no event price then create one
     if (tokenObject.eventPrice) {
         tokenObject.eventPrice = eventData.eventPrice;
     } else {
         tokenObject.eventPrice = createPrice(eventData);
-    }
+            }   
     //create name, location, link, and image
     tokenObject.eventName = eventData.name;
     //console.log(tokenObject.eventName);
@@ -165,6 +164,22 @@ var createTokenObject = function (eventData) {
 
     return tokenObject;
 }
+
+//check to see if already exists
+var checkArray = function(tokenObject) {
+    //start assuming doesn't already exist - if it does exist change value
+    var exists = false;
+    for (i in shindigArray) {
+        if (shindigArray[i].eventId === tokenObject.eventId) {
+            exists = true;
+            
+        }
+    }
+    //return value of exists
+    return exists;
+
+}
+
 
 //make button from results or (eventually) from local storage
 var eventToken = function (tokenObject, fieldType) {
@@ -197,6 +212,8 @@ var eventToken = function (tokenObject, fieldType) {
     tokenPrice.textContent = info.eventPrice;
     tokenButton.setAttribute("style", "height:72px, width:128px")
     tokenButton.textContent = "Click to Save"
+
+
     // if results is populating for first time
     if (fieldType ==="results-buttons") {
         tokenButton.addEventListener("click", function () {
@@ -211,11 +228,20 @@ var eventToken = function (tokenObject, fieldType) {
                 saveTheTokens();
                 savedTokens.removeChild(thisToken);
             }, { once: true });
-            shindigArray.push(tokenObject);
+
+                //don't push to array if it already exists in the array;
+                var exists = checkArray(tokenObject)
+                if(!exists) {
+                    shindigArray.push(tokenObject);
+                    //console.log("does not exist!");
+                } else { console.log ("already saved!")
+            };              
+            
             saveTheTokens();
         }, { once: true });
     };
 
+        //if results are populating from saved
     if (fieldType ==="planning-field") {
         tokenButton.textContent = "Click to Remove"
         tokenButton.addEventListener("click", function () {
@@ -226,6 +252,7 @@ var eventToken = function (tokenObject, fieldType) {
         savedTokens.removeChild(thisToken);
     }, { once: true });
     }
+    //append all to the container
     token.appendChild(tokenImage);
     token.appendChild(tokenDiv);
     tokenDiv.appendChild(tokenDateTime);
@@ -248,13 +275,14 @@ var ohNo = function (errorMsg) {
     var container = headerArticle.closest("div");
     console.log(container);    
     shinDangIt.textContent = "ShinDangIt!";
-    headerArticle.remove();
-    
+    //remove original headerArticle text to be replaced with error message
+    headerArticle.remove();    
     var shinDrat = document.createElement("p");
     shinDrat.textContent = errorMsg;
     shinDrat.setAttribute("class", "subtitle header-article");
     shinDrat.setAttribute("id", "subtitle");
     container.append(shinDrat);
+    //after timeout replace original text in headers
     setTimeout(function () {
         shinDangIt.textContent = "Shindig!";
         shinDrat.remove()
