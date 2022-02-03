@@ -71,7 +71,7 @@ var repopulatePage = function (tokenObject) {
     tokenDiv.appendChild(tokenPrice);
     tokenButton.addEventListener("click", function () {
         var savedTokens = document.getElementById("planning-field");
-        var thisToken = document.getElementById(event.eventName);
+        var thisToken = document.getElementById(eventData.eventName);
         removeToken(tokenObject);
         saveTheTokens();
         savedTokens.removeChild(thisToken);
@@ -89,7 +89,8 @@ var rememberArray = function () {
     //console.log(reShindig);
     //console.log("ping");
     for (i = 0; i < reShindig.length; i++) {
-        var event=reShindig[i];        
+        var event=reShindig[i]; 
+    
         let tokenObject = Object();
         tokenObject.eventDateTime = event.eventDateTime;
         tokenObject.eventName = event.eventName;
@@ -190,10 +191,12 @@ var createTokenObject = function (eventData) {
         tokenObject.eventPrice = createPrice(eventData);
     }
     //create name, location, link, and image
-    tokenObject.eventName = eventData.eventName;
+    tokenObject.eventName = eventData.name;
+    console.log(tokenObject.eventName);
     tokenObject.eventLocation = eventData._embedded.venues[0].name;
-    tokenObject.eventLink = eventData.eventLink;
+    tokenObject.eventLink = eventData.url;
     tokenObject.eventImage = eventData.images[0].url;
+    //console.log(tokenObject.eventLink);
 
     return tokenObject;
 }
@@ -227,6 +230,7 @@ var eventToken = function (tokenObject) {
     tokenDateTime.textContent = info.eventDateTime;
     tokenTitle.textContent = info.eventName;
     tokenTitle.setAttribute("href", info.eventLink);
+    //console.log(info.eventName);
     tokenLocation.textContent = info.eventLocation;
     tokenPrice.textContent = info.eventPrice;
     tokenButton.setAttribute("style", "height:72px, width:128px")
@@ -330,7 +334,7 @@ document.getElementById("search-button").addEventListener("click", function () {
 
     //check that start date is BEFORE end date - if it is then run get location
     if (startDate > endDate) {
-        console.log ("EEK end date is before start date!");
+        //console.log ("EEK end date is before start date!");
         var errorMsg = ("Curses! We can't find any events with your parameters. Try looking for all events, or in a large city nearby.");
         ohNo(errorMsg);
     } else {
