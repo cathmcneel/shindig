@@ -375,7 +375,7 @@ document.getElementById("search-button").addEventListener("click", function () {
     const words = placeSearchName.split(' ');
 
     //check that start date is BEFORE end date - if it is then run get location
-    if (startDate > endDate || !placeSearchName) {
+    if (startDate > endDate || !placeSearchName || !startDate || !endDate) {
         console.log ("EEK check dates and location!");
         var errorMsg = ("You have violated the Space-Time Continuum");
         ohNo(errorMsg);
