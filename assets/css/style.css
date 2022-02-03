@@ -87,3 +87,6 @@ nav {
     background-color: black;
     color: white;
 }
+#saved-events {
+    border: 5px solid black;
+}
