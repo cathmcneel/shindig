@@ -96,8 +96,9 @@ nav {
 }
 
 .token {
-    width: 100%;
+    width: 101%;
     color: black;
+    font-size: 11px;
     text-decoration: none;
     background: var(--secondary-color);
     display: flex;
