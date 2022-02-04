@@ -318,25 +318,32 @@ var clearText = function () {
 //error message function unsure whenthis runs
 var ohNo = function (errorMsg) {
     var shinDangIt = document.getElementById("header-title");
-    var headerArticle = $(".header-article");
-    var container = headerArticle.closest("div");
-    //console.log(container);    
-    shinDangIt.textContent = "ShinDangIt!";
-    //remove original headerArticle text to be replaced with error message
-    headerArticle.remove();
-    var shinDrat = document.createElement("p");
-    shinDrat.textContent = errorMsg;
-    shinDrat.setAttribute("class", "subtitle header-article error");
-    shinDrat.setAttribute("id", "subtitle");
-    container.append(shinDrat);
-    //after timeout replace original text in headers
-    setTimeout(function () {
-        shinDangIt.textContent = "Shindig!";
-        shinDrat.remove()
+    var headerBar = document.getElementById("header-bar");
+    var headerArticle = document.getElementById("subtitle");
+    var headerOrig = headerArticle.textContent;
 
-        container.append(headerArticle);
-        //shinDrat.textContent = shinDescription;
+    //only run if error message not already displayed
+    if (shinDangIt.textContent ==="ShinDangIt!") {
+        false
+    }else {
+            
+        shinDangIt.textContent = "ShinDangIt!";
+        shinDangIt.setAttribute("class", "error");
+        headerBar.setAttribute("class", "error");
+        headerArticle.textContent = errorMsg;
+        
+        //after timeout replace original text in headers
+        setTimeout(function () {
+            shinDangIt.textContent = "Shindig!";
+            headerBar.removeAttribute("class", "error");
+            shinDangIt.removeAttribute("class", "error");
+            headerArticle.textContent = headerOrig;
+            //shinDrat.remove()
+
+            //container.append(headerArticle);
+            //shinDrat.textContent = shinDescription;
     }, 10000);
+}
 }
 
 //call google api and get lat/long or other geo identifier for city for ticketmaster to use IF good send to Get events
