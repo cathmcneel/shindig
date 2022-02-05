@@ -44,7 +44,20 @@ body {
 .search-bar {
     border: 2px solid var(--primary-color);
     border-radius: 15px;
+    width: 400px;
 }
+
+.date-container {
+    text-align: center;
+}
+
+#btnHolder {
+    text-align: center;
+}
+#dropDownHldr {
+    text-align: center;
+}
+
 .row {
     border: 2px solid var(--primary-color);
     width: 100%;
@@ -122,5 +135,17 @@ nav {
 }
 .error {
     background-color: rgb(214, 47, 47);
+    
+}
+
+/*****************/
+
+
+/* Media Queries */
+
+
+/*****************/
+
+@media screen and (max-width: 1050px) {
     
 }
