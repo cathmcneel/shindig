@@ -13,6 +13,9 @@ Moment
 
 
 [Link to Live Site](https://cathmcneel.github.io/shindig/)
-![Screenshot](/assets/shindig-screenshot.png)
+
+
+
+![Screenshot](Screen-Shot-Shindig.jpg)
 
 
