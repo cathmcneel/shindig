@@ -63,7 +63,6 @@ var repopulatePage = function (tokenObject) {
     //tokenTitle.setAttribute("href", eventData.eventLink);
     tokenLocation.textContent = eventData.eventLocation;
     tokenPrice.textContent = eventData.eventPrice;
-    tokenButton.setAttribute("style", "height:72px, width:128px")
     tokenButton.textContent = "Click to Remove"
     token.appendChild(tokenImage);
     token.appendChild(tokenDiv);
@@ -247,14 +246,12 @@ var eventToken = function (tokenObject, fieldType) {
     tokenButton.setAttribute("class", "token-button");
     tokenImage.setAttribute("src", info.eventImage);
     tokenImage.setAttribute("alt", "Event Image");
-    tokenImage.setAttribute("style", "height:72px");
     tokenDateTime.textContent = info.eventDateTime;
     tokenTitle.innerHTML = "<a href = " + info.eventLink + " target = '_blank'>" + info.eventName + "</a>"
     //tokenTitle.setAttribute("href", info.eventLink);
     //console.log(info.eventName);
     tokenLocation.textContent = info.eventLocation;
     tokenPrice.textContent = info.eventPrice;
-    tokenButton.setAttribute("style", "height:72px, width:128px")
     tokenButton.textContent = "Click to Save"
 
 

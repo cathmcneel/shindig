@@ -146,7 +146,7 @@ nav {
 
 /*****************/
 
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 980px) {
    * {
        width: 100%;
        align-items: center;
@@ -166,4 +166,36 @@ nav {
     #mobile-text {
         text-align:center;
     }
+
+    .token {
+        font-size: 11px;
+    }
+    
+    .event-image {
+        height: 54px;
+        width: 96px;
+    }
+    
+    .token-button {
+        font-size: 11px;
+        height: 54px;
+        width: 96px;
+    }
 }
+    
+/* }
+.token {
+    font-size: 9px;
+}
+
+.event-image {
+    height: 36px;
+    width: 64px;
+    border-radius: 3px;
+}
+
+.token-button {
+    font-size: 9px;
+    height: 36px;
+    width: 64px;
+ */
