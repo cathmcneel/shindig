@@ -19,3 +19,4 @@ Moment
 ![Screenshot](Screen-Shot-Shindig.jpg)
 
 
+Made by: Catherine Mcneel, Becket Chanbliss, Steven Calebrese
