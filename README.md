@@ -13,4 +13,4 @@ Moment
 
 
 [Link to Live Site](https://cathmcneel.github.io/shindig/)
-![ScreenShot](/shindig-screenshot.png "Live site screenshot)
+[ScreenShot](/shindig-screenshot.png "Live site screenshot")
